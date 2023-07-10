@@ -11,20 +11,39 @@
 <div class="container">
   <div class="wrapper">
     <div class="title"><span>Registration Form</span></div>
-    <form action="#">
+    <form
+      method="post"
+      role="form"
+      action="#"
+      th:action="@{/registration}"
+      th:object="${customer}"
+    >
       <div class="row">
-        <input type="text" placeholder="Email" required>
+        <input
+                type="text"
+                placeholder="Email"
+                th:field="*{email}"
+                required
+        >
       </div>
       <div class="row">
-        <input type="text" placeholder="Account No" required>
+        <input type="text"
+               placeholder="Account No"
+               th:field="*{accountNumber}"
+               required
+        >
       </div>
       <div class="row">
-        <input type="text" placeholder="Meter No" required>
+        <input type="text"
+               placeholder="Meter No"
+               th:field="*{accountNumber}"
+               required
+        >
       </div>
       <div class="row button">
         <input type="submit" value="Register">
       </div>
-      <div class="signup-link"><a href="#">Log In</a></div>
+      <div class="signup-link"><a th:href="@{/}">Log In</a></div>
     </form>
   </div>
 </div>

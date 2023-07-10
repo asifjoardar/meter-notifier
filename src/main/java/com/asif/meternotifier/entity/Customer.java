@@ -9,7 +9,7 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String Email;
+    private String email;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_details_id")
     private List<MeterAccountDetails>meterAccountDetailsList;
@@ -23,11 +23,11 @@ public class Customer {
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        email = email;
     }
 
     public List<MeterAccountDetails> getMeterAccountDetailsList() {
