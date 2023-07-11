@@ -13,7 +13,7 @@
         <div class="list-item">
             <ul>
                 <li th:each="accountDetail: ${accountDetails}">
-                    <a th:text="${accountDetail.meterNumber}"></a>
+                    <a th:text="${accountDetail.meterNumber}" th:href="@{/customer-account/{accountNumber}(accountNumber=${accountDetail.accountNumber})}"></a>
                 </li>
             </ul>
         </div>

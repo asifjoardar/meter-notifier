@@ -5,23 +5,34 @@ import com.asif.meternotifier.dto.LoginDto;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
 import com.asif.meternotifier.service.CustomerService;
+import com.asif.meternotifier.service.RestService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.io.*;
 
 @Controller
 public class HomeController {
 
     private CustomerService customerService;
 
-    public HomeController(CustomerService customerService){
+    private RestService restService;
+
+    public HomeController(CustomerService customerService, RestService restService){
         this.customerService = customerService;
+        this.restService = restService;
     }
 
     @GetMapping("/")
@@ -75,11 +86,20 @@ public class HomeController {
         return "customer-info";
     }
 
-    @GetMapping("/customer-info/{id}/{meterNumber}/{customerNumber}")
-    public String customerInfoDetails(@PathVariable(value = "id") Long id,
-                                      @PathVariable Map<String, String>accountDetails,
-                                      Model model){
-
-        return "";
+    @GetMapping("/customer-account/{accountNumber}")
+    public String customerInfoDetails(@PathVariable("accountNumber") String accountNumber) {
+        // sending get request to the desco api
+        /*String url = "http://prepaid.desco.org.bd/api/tkdes/customer/getBalance?accountNo="+accountDetails.get("accountNumber")+"&meterNo="+accountDetails.get("meterNumber");
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> response = mapper.readValue(restService.getPostsPlainJSON(url), Map.class);
+        model.addAttribute("customer", response.get("data"));*/
+        /*Map<String, String>data = new HashMap<>();
+        data.put("accountNo", "12042012");
+        data.put("meterNo", "663110109424");
+        data.put("balance", "1369.58");
+        data.put("currentMonthConsumption", "1249.35");
+        data.put("readingTime", "2023-07-11 00:00:00");
+        model.addAttribute("customer", data);*/
+        return "customer-account-details";
     }
 }
