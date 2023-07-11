@@ -4,8 +4,11 @@ import com.asif.meternotifier.dto.CustomerDto;
 import com.asif.meternotifier.dto.LoginDto;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
+import com.asif.meternotifier.repository.MeterAccountDetailsRepository;
 import com.asif.meternotifier.service.CustomerService;
 import com.asif.meternotifier.service.RestService;
+import com.asif.meternotifier.util.RequestSender;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,9 +33,18 @@ public class HomeController {
 
     private RestService restService;
 
-    public HomeController(CustomerService customerService, RestService restService){
+    private MeterAccountDetailsRepository meterAccountDetailsRepository;
+
+    private RequestSender requestSender;
+
+    public HomeController(CustomerService customerService,
+                          RestService restService,
+                          MeterAccountDetailsRepository meterAccountDetailsRepository,
+                          RequestSender requestSender){
         this.customerService = customerService;
         this.restService = restService;
+        this.meterAccountDetailsRepository = meterAccountDetailsRepository;
+        this.requestSender = requestSender;
     }
 
     @GetMapping("/")
@@ -66,7 +78,7 @@ public class HomeController {
     public String confirmUserAccount(@RequestParam("token")String confirmationToken) {
         try {
             if(customerService.confirmEmail(confirmationToken)){
-                return "login";
+                return "redirect:/";
             }
             else {
                 throw new Exception("Token is not valid");
@@ -74,7 +86,7 @@ public class HomeController {
 
         } catch (Exception e){
             System.out.println(e);
-            return "login";
+            return "registration";
         }
     }
 
@@ -87,19 +99,31 @@ public class HomeController {
     }
 
     @GetMapping("/customer-account/{accountNumber}")
-    public String customerInfoDetails(@PathVariable("accountNumber") String accountNumber) {
-        // sending get request to the desco api
-        /*String url = "http://prepaid.desco.org.bd/api/tkdes/customer/getBalance?accountNo="+accountDetails.get("accountNumber")+"&meterNo="+accountDetails.get("meterNumber");
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> response = mapper.readValue(restService.getPostsPlainJSON(url), Map.class);
-        model.addAttribute("customer", response.get("data"));*/
+    public String customerInfoDetails(@PathVariable("accountNumber") String accountNumber, Model model) throws JsonProcessingException {
+        MeterAccountDetails meterAccountDetails = meterAccountDetailsRepository.findByAccountNumber(accountNumber);
+        String url = "http://prepaid.desco.org.bd/api/tkdes/customer/getBalance?accountNo="+accountNumber+"&meterNo="+meterAccountDetails.getMeterNumber();
+        Map<String, Object> response = requestSender.request(url);
+        model.addAttribute("customer", response.get("data"));
         /*Map<String, String>data = new HashMap<>();
         data.put("accountNo", "12042012");
         data.put("meterNo", "663110109424");
         data.put("balance", "1369.58");
         data.put("currentMonthConsumption", "1249.35");
-        data.put("readingTime", "2023-07-11 00:00:00");
-        model.addAttribute("customer", data);*/
+        data.put("readingTime", "2023-07-11 00:00:00");*/
+
+        //model.addAttribute("customer", data);
+        model.addAttribute("notified", false);
+
         return "customer-account-details";
     }
+    @GetMapping("/start-notification")
+    public String notification(){
+        return "get-notification";
+    }
+    /*@PostMapping("/start-notification")
+    public String startNotification(){
+        Customer
+        return "get-notification";
+    }*/
+
 }

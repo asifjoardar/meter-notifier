@@ -3,41 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <title>Customer Info</title>
-  <link rel="stylesheet" href="../customer-info.css">
+  <link rel="stylesheet" href="../customer-account-details.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
 </head>
 <body>
-<!--<div class="container">
+<div class="container">
   <div class="wrapper">
     <div class="title"><span>Account Details</span></div>
-
+    <table>
+      <tbody th:object="${customer}">
+      <tr>
+        <td>Account No</td>
+        <td th:text="${customer.accountNo}">23</td>
+      </tr>
+      <tr>
+        <td>Meter No</td>
+        <td th:text="${customer.meterNo}">47</td>
+      </tr>
+      <tr>
+        <td>Balance</td>
+        <td th:text="${customer.balance}">12</td>
+      </tr>
+      <tr>
+        <td>Current Month Consumption</td>
+        <td th:text="${customer.currentMonthConsumption}">12</td>
+      </tr>
+      <tr>
+        <td>Reading Time</td>
+        <td th:text="${customer.readingTime}">12</td>
+      </tr>
+      </tbody>
+    </table>
   </div>
-</div>-->
-<table>
-  <thead>
-  <tr>
-    <td>Name</td>
-    <td>Gender</td>
-    <td>Age</td>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td>David</td>
-    <td>Male</td>
-    <td>23</td>
-  </tr>
-  <tr>
-    <td>Jessica</td>
-    <td>Female</td>
-    <td>47</td>
-  </tr>
-  <tr>
-    <td>Warren</td>
-    <td>Male</td>
-    <td>12</td>
-  </tr>
-  </tbody>
-</table>
+</div>
+<div class="notification">
+  <form th:if="${not notified}">
+    <span>Want to get notified when your balance is less?</span>
+    <a th:href="@{/start-notification}" type="button" class="button-3">Click Me!</a>
+  </form>
+  <form th:if="${notified}">
+    <span>Stop Notification Service!!!</span>
+    <a type="button" class="button-3">Stop!</a>
+  </form>
+</div>
 </body>
 </html>

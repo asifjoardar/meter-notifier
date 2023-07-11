@@ -5,6 +5,7 @@ import com.asif.meternotifier.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
@@ -12,4 +13,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Customer findByEmail(String email);
 
     Optional<Customer> findById(Long id);
+
+    @Query(value = "select * from customer where notification = ?1", nativeQuery = true)
+    List<Customer> findByNotified(boolean sendNotification);
 }

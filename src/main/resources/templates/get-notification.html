@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Info</title>
+    <link rel="stylesheet" href="../get-notification.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+</head>
+<body>
+<div class="notification">
+    <form>
+        <span>You will get notified when your balance is less than or equal to 200 taka.</span>
+        <a type="button" class="button-3" th:href="@{/start-notification}">Proceed</a>
+    </form>
+    <form>
+        <span>Are You Sure?</span>
+        <input type="button" class="button-3" value="Yes" />
+    </form>
+</div>
+</body>
+</html>
