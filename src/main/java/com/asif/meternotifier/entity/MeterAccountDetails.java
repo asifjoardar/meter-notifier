@@ -7,19 +7,29 @@ import jakarta.persistence.Id;
 
 @Entity
 public class MeterAccountDetails {
-    @Id
+    /*@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;*/
+
+    @Id
     private String accountNumber;
     private String meterNumber;
 
-    public Long getId() {
-        return id;
+    public MeterAccountDetails() {
     }
 
+    public MeterAccountDetails(String accountNumber, String meterNumber) {
+        this.accountNumber = accountNumber;
+        this.meterNumber = meterNumber;
+    }
+
+    /*public Long getId() {
+        return id;
+    }
+-
     public void setId(Long id) {
         this.id = id;
-    }
+    }*/
 
     public String getAccountNumber() {
         return accountNumber;
@@ -35,5 +45,13 @@ public class MeterAccountDetails {
 
     public void setMeterNumber(String meterNumber) {
         this.meterNumber = meterNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "MeterAccountDetails{" +
+                "accountNumber='" + accountNumber + '\'' +
+                ", meterNumber='" + meterNumber + '\'' +
+                '}';
     }
 }

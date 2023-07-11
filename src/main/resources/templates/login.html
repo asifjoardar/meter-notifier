@@ -11,9 +11,19 @@
 <div class="container">
     <div class="wrapper">
         <div class="title"><span>Login Form</span></div>
-        <form action="#">
+        <form
+                method="post"
+                action="#"
+                th:action="@{/}"
+                th:object="${login}"
+        >
             <div class="row">
-                <input type="text" placeholder="Email" required>
+                <input
+                        type="text"
+                        placeholder="Email"
+                        th:field="*{email}"
+                        required
+                >
             </div>
             <div class="row button">
                 <input type="submit" value="Login">
