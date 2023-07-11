@@ -2,6 +2,7 @@ package com.asif.meternotifier.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -10,12 +11,19 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String email;
-    private boolean isEnabled;
+    private boolean enabled;
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id")
-    private List<MeterAccountDetails>meterAccountDetailsList;
+    //@JoinColumn(name = "customer_id")
+    private List<MeterAccountDetails>meterAccountDetailsList = new ArrayList<>();
 
     public Customer() {
+    }
+
+    public Customer(Long id, String email, boolean enabled, List<MeterAccountDetails> meterAccountDetailsList) {
+        this.id = id;
+        this.email = email;
+        this.enabled = enabled;
+        this.meterAccountDetailsList = meterAccountDetailsList;
     }
 
     public Long getId() {
@@ -26,25 +34,20 @@ public class Customer {
         this.id = id;
     }
 
-    public Customer(String email, List<MeterAccountDetails> meterAccountDetailsList) {
-        this.email = email;
-        this.meterAccountDetailsList = meterAccountDetailsList;
-    }
-
-    public boolean isEnabled() {
-        return isEnabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public List<MeterAccountDetails> getMeterAccountDetailsList() {
@@ -60,7 +63,7 @@ public class Customer {
         return "Customer{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", isEnabled=" + isEnabled +
+                ", isEnabled=" + enabled +
                 ", meterAccountDetailsList=" + meterAccountDetailsList +
                 '}';
     }

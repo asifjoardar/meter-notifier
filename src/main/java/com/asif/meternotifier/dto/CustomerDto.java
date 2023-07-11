@@ -28,4 +28,13 @@ public class CustomerDto {
     public void setMeterNumber(String meterNumber) {
         this.meterNumber = meterNumber;
     }
+
+    @Override
+    public String toString() {
+        return "CustomerDto{" +
+                "email='" + email + '\'' +
+                ", accountNumber='" + accountNumber + '\'' +
+                ", meterNumber='" + meterNumber + '\'' +
+                '}';
+    }
 }

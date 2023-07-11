@@ -1,9 +1,6 @@
 package com.asif.meternotifier.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class MeterAccountDetails {
@@ -14,6 +11,9 @@ public class MeterAccountDetails {
     @Id
     private String accountNumber;
     private String meterNumber;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Customer customer;
 
     public MeterAccountDetails() {
     }

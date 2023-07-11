@@ -12,8 +12,7 @@ import com.asif.meternotifier.service.EmailService;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -42,29 +41,30 @@ public class CustomerServiceImpl implements CustomerService {
             meterAccountDetails.setAccountNumber(customerDto.getAccountNumber());
             meterAccountDetails.setMeterNumber(customerDto.getMeterNumber());
 
-            List<MeterAccountDetails> meterAccountDetailsList = new ArrayList<>();
-            meterAccountDetailsList.add(meterAccountDetails);
-
             Customer customer = new Customer();
-            customer.setEmail(customerDto.getEmail());
-            customer.setMeterAccountDetailsList(meterAccountDetailsList);
-            System.out.println(customerDto.getEmail());
-            customerRepository.save(customer);
+            if(customerRepository.findByEmail(customerDto.getEmail()) != null){
+                customer = customerRepository.findByEmail(customerDto.getEmail());
+                customer.getMeterAccountDetailsList().add(meterAccountDetails);
+                customerRepository.save(customer);
+            } else{
+                customer.setEmail(customerDto.getEmail());
+                customer.getMeterAccountDetailsList().add(meterAccountDetails);
+                customerRepository.save(customer);
 
-            // token generate
-            ConfirmationToken confirmationToken = new ConfirmationToken(customer);
-            confirmationTokenRepository.save(confirmationToken);
+                // token generate
+                ConfirmationToken confirmationToken = new ConfirmationToken(customer);
+                confirmationTokenRepository.save(confirmationToken);
 
-            // email sender
+                // email sender
+                SimpleMailMessage mailMessage = new SimpleMailMessage();
+                mailMessage.setTo(customerDto.getEmail());
+                mailMessage.setSubject("Complete Registration!");
+                mailMessage.setText("To confirm your account, please click here : "
+                        +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());
+                //emailService.sendEmail(mailMessage);
 
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setTo(customerDto.getEmail());
-            mailMessage.setSubject("Complete Registration!");
-            mailMessage.setText("To confirm your account, please click here : "
-                    +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());
-            //emailService.sendEmail(mailMessage);
-
-            System.out.println("Confirmation Token: " + confirmationToken.getConfirmationToken());
+                System.out.println("Confirmation Token: " + confirmationToken.getConfirmationToken());
+            }
 
         } catch (Exception e){
             System.out.println(e);
@@ -74,6 +74,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer findCustomerByEmail(String email){
         return customerRepository.findByEmail(email);
+    }
+
+    @Override
+    public Optional<Customer> findCustomerById(Long id){
+        return customerRepository.findById(id);
     }
 
     @Override
