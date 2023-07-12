@@ -26,7 +26,7 @@ public class NotificationScheduler {
         this.emailSender = emailSender;
     }
     Logger logger = LoggerFactory.getLogger(MeterAccountDetails.class);
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 3600000)
     public void execute() throws JsonProcessingException {
         System.out.println("scheduler call in " + new Date().toString());
 
@@ -39,7 +39,7 @@ public class NotificationScheduler {
             ObjectMapper mapper = new ObjectMapper();
             Data data = mapper.treeToValue(requestSender.request(url), Data.class);
             if(data.getBalance() <= 1500.00 && meterAccountDetails.isNotified() == false){
-                emailSender.send(meterAccountDetails.getCustomer().getEmail(), "Yor balance is low", "Dear Customer your current balance is "+200+"please recharge.");
+                emailSender.send(meterAccountDetails.getCustomer().getEmail(), "Balance is low", "Dear Customer your current balance is "+data.getBalance()+"taka please recharge.");
                 meterAccountDetails.setNotified(true);
                 meterAccountDetailsRepository.save(meterAccountDetails);
             }

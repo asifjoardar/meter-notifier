@@ -1,8 +1,6 @@
 package com.asif.meternotifier.util;
 
 import com.asif.meternotifier.service.EmailService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 

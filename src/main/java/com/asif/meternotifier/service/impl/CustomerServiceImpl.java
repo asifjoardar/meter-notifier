@@ -8,9 +8,7 @@ import com.asif.meternotifier.repository.ConfirmationTokenRepository;
 import com.asif.meternotifier.repository.CustomerRepository;
 import com.asif.meternotifier.repository.MeterAccountDetailsRepository;
 import com.asif.meternotifier.service.CustomerService;
-import com.asif.meternotifier.service.EmailService;
 import com.asif.meternotifier.util.EmailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
