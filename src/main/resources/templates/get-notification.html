@@ -8,14 +8,14 @@
 </head>
 <body>
 <div class="notification">
-    <form th:if="${not accountDetails.notification}">
+    <div th:if="${not accountDetails.notification}">
         <span>You will get notified when your balance is less than or equal to 200 taka.</span>
         <a type="button" class="button-3" th:href="@{/start-notification/{accountNumber}(accountNumber=${accountDetails.accountNumber})}">Proceed</a>
-    </form>
-    <form th:if="${accountDetails.notification}">
+    </div>
+    <div th:if="${accountDetails.notification}">
         <span>Are You Sure?</span>
         <a type="button" class="button-3" th:href="@{/stop-notification/{accountNumber}(accountNumber=${accountDetails.accountNumber})}">Yes</a>
-    </form>
+    </div>
 </div>
 </body>
 </html>
