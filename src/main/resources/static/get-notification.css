@@ -8,6 +8,7 @@
 body{
     background: #1abc9c;
     overflow: hidden;
+    height: 100%;
 }
 
 .button-3 {

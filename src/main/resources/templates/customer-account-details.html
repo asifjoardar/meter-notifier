@@ -6,12 +6,12 @@
   <link rel="stylesheet" href="../customer-account-details.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
 </head>
-<body>
+<body th:object="${customer}">
 <div class="container">
   <div class="wrapper">
     <div class="title"><span>Account Details</span></div>
     <table>
-      <tbody th:object="${customer}">
+      <tbody>
       <tr>
         <td>Account No</td>
         <td th:text="${customer.accountNo}">23</td>
@@ -37,13 +37,13 @@
   </div>
 </div>
 <div class="notification">
-  <form th:if="${not notified}">
+  <form th:if="${not notification}">
     <span>Want to get notified when your balance is less?</span>
-    <a th:href="@{/start-notification}" type="button" class="button-3">Click Me!</a>
+    <a th:href="@{/notification-starter/{accountNumber}(accountNumber=${customer.accountNo})}" type="button" class="button-3">Click Me!</a>
   </form>
-  <form th:if="${notified}">
+  <form th:if="${notification}">
     <span>Stop Notification Service!!!</span>
-    <a type="button" class="button-3">Stop!</a>
+    <a th:href="@{/notification-starter/{accountNumber}(accountNumber=${customer.accountNo})}" type="button" class="button-3">Stop!</a>
   </form>
 </div>
 </body>

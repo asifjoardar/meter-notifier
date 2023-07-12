@@ -13,8 +13,6 @@ public class Customer {
     private String email;
     private boolean enabled;
 
-    private boolean notification;
-    private boolean notified;
     @OneToMany(cascade = CascadeType.ALL)
     //@JoinColumn(name = "customer_id")
     private List<MeterAccountDetails>meterAccountDetailsList = new ArrayList<>();
@@ -22,12 +20,10 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(Long id, String email, boolean enabled, boolean notification, boolean notified, List<MeterAccountDetails> meterAccountDetailsList) {
+    public Customer(Long id, String email, boolean enabled, List<MeterAccountDetails> meterAccountDetailsList) {
         this.id = id;
         this.email = email;
         this.enabled = enabled;
-        this.notification = notification;
-        this.notified = notified;
         this.meterAccountDetailsList = meterAccountDetailsList;
     }
 
@@ -63,29 +59,12 @@ public class Customer {
         this.meterAccountDetailsList = meterAccountDetailsList;
     }
 
-    public boolean isNotified() {
-        return notified;
-    }
-
-    public void setNotified(boolean notified) {
-        this.notified = notified;
-    }
-
-    public boolean isNotification() {
-        return notification;
-    }
-
-    public void setNotification(boolean notification) {
-        this.notification = notification;
-    }
-
     @Override
     public String toString() {
         return "Customer{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", enabled=" + enabled +
-                ", notified=" + notified +
                 ", meterAccountDetailsList=" + meterAccountDetailsList +
                 '}';
     }

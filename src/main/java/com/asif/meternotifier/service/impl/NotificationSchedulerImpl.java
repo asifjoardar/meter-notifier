@@ -29,9 +29,9 @@ public class NotificationSchedulerImpl implements NotificationScheduler {
         this.emailSender = emailSender;
     }
     //@Scheduled(fixedRate = 3600000)
-    @Scheduled(cron = "0/15 * * * * *")
+    //@Scheduled(cron = "0/15 * * * * *")
     public void execute() throws JsonProcessingException {
-        List<Customer> customers = customerRepository.findByNotified(false);
+        /*List<Customer> customers = customerRepository.findByNotified(false);
         for (Customer customer:customers){
             System.out.println("from scheduler");
             System.out.println(customers);
@@ -39,12 +39,12 @@ public class NotificationSchedulerImpl implements NotificationScheduler {
             for (MeterAccountDetails meterAccountDetails:meterAccountDetailsList){
                 //String url = "http://prepaid.desco.org.bd/api/tkdes/customer/getBalance?accountNo="+meterAccountDetails.getAccountNumber()+"&meterNo="+meterAccountDetails.getMeterNumber();
                 //Map<String, Object> response = requestSender.request(url);
-                if(/*(int)response.get("balance")*/200 <= 200 && customer.isNotified() == false){
+                if(*//*(int)response.get("balance")*//*200 <= 200 && customer.isNotified() == false){
                     emailSender.send(customer.getEmail(), "Yor balance is low", "Dear Customer your current balance is "+200+"please recharge.");
                     customer.setNotified(true);
                     customerRepository.save(customer);
                 }
             }
-        }
+        }*/
     }
 }

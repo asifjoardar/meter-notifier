@@ -56,14 +56,12 @@ public class CustomerServiceImpl implements CustomerService {
                 customer.setEmail(customerDto.getEmail());
                 customer.getMeterAccountDetailsList().add(meterAccountDetails);
                 customerRepository.save(customer);
-
                 // token generate
                 ConfirmationToken confirmationToken = new ConfirmationToken(customer);
                 confirmationTokenRepository.save(confirmationToken);
-
                 // email sender
-                emailSender.send(customerDto.getEmail(), "Complete Registration!", "To confirm your account, please click here : "
-                        +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());
+                /*emailSender.send(customerDto.getEmail(), "Complete Registration!", "To confirm your account, please click here : "
+                        +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());*/
             }
 
         } catch (Exception e){
