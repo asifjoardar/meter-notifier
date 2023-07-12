@@ -20,19 +20,16 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
     private MeterAccountDetailsRepository meterAccountDetailsRepository;
     private ConfirmationTokenRepository confirmationTokenRepository;
-    private EmailService emailService;
 
     private EmailSender emailSender;
 
     public CustomerServiceImpl(CustomerRepository customerRepository,
                                ConfirmationTokenRepository confirmationTokenRepository,
                                MeterAccountDetailsRepository meterAccountDetailsRepository,
-                               EmailService emailService,
                                EmailSender emailSender){
         this.customerRepository = customerRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
         this.meterAccountDetailsRepository = meterAccountDetailsRepository;
-        this.emailService = emailService;
         this.emailSender = emailSender;
     }
 
@@ -60,9 +57,11 @@ public class CustomerServiceImpl implements CustomerService {
                 ConfirmationToken confirmationToken = new ConfirmationToken(customer);
                 confirmationTokenRepository.save(confirmationToken);
                 // email sender
-                /*emailSender.send(customerDto.getEmail(), "Complete Registration!", "To confirm your account, please click here : "
-                        +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());*/
+                emailSender.send(customerDto.getEmail(), "Complete Registration!", "To confirm your account, please click here : "
+                        +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());
             }
+            meterAccountDetails.setCustomer(customer);
+            meterAccountDetailsRepository.save(meterAccountDetails);
 
         } catch (Exception e){
             System.out.println(e);

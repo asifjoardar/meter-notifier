@@ -13,7 +13,8 @@ public class Customer {
     private String email;
     private boolean enabled;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", cascade = { CascadeType.MERGE,
+            CascadeType.PERSIST }, orphanRemoval = true, fetch = FetchType.LAZY)
     //@JoinColumn(name = "customer_id")
     private List<MeterAccountDetails>meterAccountDetailsList = new ArrayList<>();
 
@@ -59,7 +60,7 @@ public class Customer {
         this.meterAccountDetailsList = meterAccountDetailsList;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "Customer{" +
                 "id=" + id +
@@ -67,5 +68,5 @@ public class Customer {
                 ", enabled=" + enabled +
                 ", meterAccountDetailsList=" + meterAccountDetailsList +
                 '}';
-    }
+    }*/
 }

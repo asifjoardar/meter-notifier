@@ -1,6 +1,8 @@
 package com.asif.meternotifier.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 public class MeterAccountDetails {
@@ -12,6 +14,8 @@ public class MeterAccountDetails {
     private boolean notified;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "customer_id", nullable = true)
     private Customer customer;
 
     public MeterAccountDetails() {
@@ -55,6 +59,14 @@ public class MeterAccountDetails {
 
     public void setNotified(boolean notified) {
         this.notified = notified;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     @Override

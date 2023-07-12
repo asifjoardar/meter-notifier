@@ -10,5 +10,5 @@ import java.util.List;
 public interface MeterAccountDetailsRepository extends JpaRepository<MeterAccountDetails, String> {
     MeterAccountDetails findByAccountNumber(String accountNumber);
     MeterAccountDetails findByMeterNumber(String meterNumber);
-    List<MeterAccountDetails> findAllByNotified(boolean notification);
+    List<MeterAccountDetails> findAllByNotification(boolean notification);
 }
