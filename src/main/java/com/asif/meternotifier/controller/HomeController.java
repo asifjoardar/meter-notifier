@@ -18,11 +18,11 @@ public class HomeController {
 
     @GetMapping("/")
     public String showLoginForm(Model model){
-        model.addAttribute("login", new LoginDto());
-        return "login";
+        model.addAttribute("signin", new LoginDto());
+        return "signin";
     }
     @PostMapping("/")
-    public String login(@ModelAttribute(value = "login") LoginDto loginDto){
+    public String login(@ModelAttribute(value = "signin") LoginDto loginDto){
         if(customerService.findCustomerByEmail(loginDto.getEmail()) != null){
             if(customerService.findCustomerByEmail(loginDto.getEmail()).isEnabled()){
                 return "redirect:/customer-info/"+customerService.findCustomerByEmail(loginDto.getEmail()).getId();
@@ -33,12 +33,12 @@ public class HomeController {
             return "redirect:/";
         }
     }
-    @GetMapping("/registration")
+    @GetMapping("/signup")
     public String showRegistrationForm(Model model){
         model.addAttribute("customer", new CustomerDto());
-        return "registration";
+        return "signup";
     }
-    @PostMapping("/registration")
+    @PostMapping("/signup")
     public String registration(@ModelAttribute(value = "customer") CustomerDto customerDto){
         customerService.saveCustomer(customerDto);
         return "redirect:/";

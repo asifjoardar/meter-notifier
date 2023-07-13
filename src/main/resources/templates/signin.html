@@ -3,19 +3,23 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Form</title>
-    <link rel="stylesheet" href="../login.css">
+    <title>Meter Notifier | Signin</title>
+    <link rel="stylesheet" href="../signin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
 </head>
 <body>
+<div th:insert="navbar :: navbar">  </div>
 <div class="container">
     <div class="wrapper">
-        <div class="title"><span>Login Form</span></div>
+        <div class="title">
+            <span>Welcome!</span>
+            <span>Signin to view your meter details</span>
+        </div>
         <form
                 method="post"
                 action="#"
                 th:action="@{/}"
-                th:object="${login}"
+                th:object="${signin}"
         >
             <div class="row">
                 <input
@@ -26,9 +30,13 @@
                 >
             </div>
             <div class="row button">
-                <input type="submit" value="Login">
+                <input type="submit" value="Signin">
             </div>
-            <div class="signup-link"><a th:href="@{/registration}">Registration</a></div>
+            <div class="signup">
+            <span class="signup">Don't have an account?
+             <label><a th:href="@{/signup}">Signup</a></label>
+            </span>
+            </div>
         </form>
     </div>
 </div>

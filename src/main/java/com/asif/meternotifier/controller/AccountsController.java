@@ -41,7 +41,7 @@ public class AccountsController {
 
         } catch (Exception e){
             System.out.println(e);
-            return "registration";
+            return "signup";
         }
     }
 
