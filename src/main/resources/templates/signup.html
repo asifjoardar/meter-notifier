@@ -27,14 +27,15 @@
                 required
         >
       </div>
-      <div class="row">
+      <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+      <div class="row" th:object="${meterAccountDetails}">
         <input type="text"
                placeholder="Account No"
                th:field="*{accountNumber}"
                required
         >
       </div>
-      <div class="row">
+      <div class="row" th:object="${meterAccountDetails}">
         <input type="text"
                placeholder="Meter No"
                th:field="*{meterNumber}"

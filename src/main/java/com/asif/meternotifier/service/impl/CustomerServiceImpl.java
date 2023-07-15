@@ -1,6 +1,5 @@
 package com.asif.meternotifier.service.impl;
 
-import com.asif.meternotifier.dto.CustomerDto;
 import com.asif.meternotifier.entity.ConfirmationToken;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
@@ -32,32 +31,20 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void saveCustomer(CustomerDto customerDto){
+    public void saveCustomer(Customer customer, MeterAccountDetails meterAccountDetails){
         try{
-            MeterAccountDetails meterAccountDetails = new MeterAccountDetails();
-            if(meterAccountDetailsRepository.findByAccountNumber(customerDto.getAccountNumber()) != null ||
-                    meterAccountDetailsRepository.findByMeterNumber(customerDto.getMeterNumber()) != null){
-                throw new Exception("Account/Meter number already registered with this mail.");
+            if(meterAccountDetailsRepository.findByAccountNumber(meterAccountDetails.getAccountNumber()) != null &&
+                    meterAccountDetailsRepository.findByMeterNumber(meterAccountDetails.getMeterNumber()) != null){
+                throw new Exception("Account and Meter number already registered with this mail.");
             }
-            meterAccountDetails.setAccountNumber(customerDto.getAccountNumber());
-            meterAccountDetails.setMeterNumber(customerDto.getMeterNumber());
-
-            Customer customer = new Customer();
-            if(customerRepository.findByEmail(customerDto.getEmail()) != null){
-                customer = customerRepository.findByEmail(customerDto.getEmail());
-                customer.getMeterAccountDetailsList().add(meterAccountDetails);
-                customerRepository.save(customer);
-            } else{
-                customer.setEmail(customerDto.getEmail());
-                customer.getMeterAccountDetailsList().add(meterAccountDetails);
-                customerRepository.save(customer);
-                // token generate
-                ConfirmationToken confirmationToken = new ConfirmationToken(customer);
-                confirmationTokenRepository.save(confirmationToken);
-                // email sender
-                emailSender.send(customerDto.getEmail(), "Complete Registration!", "To confirm your account, please click here : "
-                        +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());
-            }
+            customer.getMeterAccountDetailsList().add(meterAccountDetails);
+            customerRepository.save(customer);
+            // token generate
+            ConfirmationToken confirmationToken = new ConfirmationToken(customer);
+            confirmationTokenRepository.save(confirmationToken);
+            // email sender
+            emailSender.send(customer.getEmail(), "Complete Registration!", "To confirm your account, please click here : "
+                    +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());
             meterAccountDetails.setCustomer(customer);
             meterAccountDetailsRepository.save(meterAccountDetails);
 

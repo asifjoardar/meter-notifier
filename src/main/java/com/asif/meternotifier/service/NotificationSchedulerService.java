@@ -34,7 +34,7 @@ public class NotificationSchedulerService {
         this.dataMapper = dataMapper;
     }
     Logger logger = LoggerFactory.getLogger(MeterAccountDetails.class);
-    @Scheduled(fixedRate = 2000)
+    //@Scheduled(fixedRate = 2000)
     public void execute() throws JsonProcessingException {
         List<MeterAccountDetails> meterAccountDetailsListTrue = meterAccountDetailsRepository.findAllByNotification(true);
         List<MeterAccountDetails> meterAccountDetailsListFalse = meterAccountDetailsRepository.findAllByNotification(false);

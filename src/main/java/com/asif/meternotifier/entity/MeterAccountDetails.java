@@ -1,6 +1,7 @@
 package com.asif.meternotifier.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -8,7 +9,9 @@ import org.hibernate.annotations.OnDeleteAction;
 public class MeterAccountDetails {
 
     @Id
+    @NotEmpty
     private String accountNumber;
+    @NotEmpty
     private String meterNumber;
     private boolean notification;
     private boolean notified;

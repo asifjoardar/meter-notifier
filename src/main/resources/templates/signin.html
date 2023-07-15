@@ -19,7 +19,7 @@
                 method="post"
                 action="#"
                 th:action="@{/}"
-                th:object="${signin}"
+                th:object="${customer}"
         >
             <div class="row">
                 <input
@@ -29,6 +29,7 @@
                         required
                 >
             </div>
+            <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
             <div class="row button">
                 <input type="submit" value="Signin">
             </div>

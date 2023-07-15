@@ -1,10 +1,12 @@
 package com.asif.meternotifier.controller;
 
-import com.asif.meternotifier.dto.CustomerDto;
-import com.asif.meternotifier.dto.LoginDto;
+import com.asif.meternotifier.entity.Customer;
+import com.asif.meternotifier.entity.MeterAccountDetails;
 import com.asif.meternotifier.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -17,30 +19,32 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String showLoginForm(Model model){
-        model.addAttribute("signin", new LoginDto());
+    public String showLoginForm(Customer customer){
         return "signin";
     }
     @PostMapping("/")
-    public String login(@ModelAttribute(value = "signin") LoginDto loginDto){
-        if(customerService.findCustomerByEmail(loginDto.getEmail()) != null){
-            if(customerService.findCustomerByEmail(loginDto.getEmail()).isEnabled()){
-                return "redirect:/customer-info/"+customerService.findCustomerByEmail(loginDto.getEmail()).getId();
-            } else{
-                return "redirect:/";
-            }
-        } else {
-            return "redirect:/";
+    public String login(@Valid Customer customer, BindingResult result, Model model){
+        if (result.hasErrors()) {
+            return "signin";
         }
+        /*if (customerService.findCustomerByEmail(customer.getEmail()).isEnabled()){
+            return "redirect:/customer-info/"+customer.getId();
+        }*/
+        if (customerService.findCustomerByEmail(customer.getEmail()) != null){
+            return "redirect:/customer-info/"+customerService.findCustomerByEmail(customer.getEmail()).getId();
+        }
+        return "redirect:/";
     }
     @GetMapping("/signup")
-    public String showRegistrationForm(Model model){
-        model.addAttribute("customer", new CustomerDto());
+    public String showRegistrationForm(Customer customer, MeterAccountDetails meterAccountDetails){
         return "signup";
     }
     @PostMapping("/signup")
-    public String registration(@ModelAttribute(value = "customer") CustomerDto customerDto){
-        customerService.saveCustomer(customerDto);
+    public String registration(@Valid Customer customer, BindingResult result, MeterAccountDetails meterAccountDetails, Model model){
+        if (result.hasErrors()) {
+            return "signup";
+        }
+        customerService.saveCustomer(customer, meterAccountDetails);
         return "redirect:/";
     }
 }

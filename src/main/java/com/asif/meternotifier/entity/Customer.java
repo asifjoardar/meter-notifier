@@ -1,6 +1,8 @@
 package com.asif.meternotifier.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,8 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @NotEmpty
+    @Email
     private String email;
     private boolean enabled;
 
@@ -59,7 +63,8 @@ public class Customer {
         this.meterAccountDetailsList = meterAccountDetailsList;
     }
 
-    /*@Override
+    /*
+    @Override
     public String toString() {
         return "Customer{" +
                 "id=" + id +

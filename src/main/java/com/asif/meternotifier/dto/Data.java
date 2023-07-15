@@ -7,6 +7,21 @@ public class Data {
     private String currentMonthConsumption;
     private String readingTime;
 
+    public Data() {
+    }
+
+    public Data(String accountNo,
+                String meterNo,
+                double balance,
+                String currentMonthConsumption,
+                String readingTime) {
+        this.accountNo = accountNo;
+        this.meterNo = meterNo;
+        this.balance = balance;
+        this.currentMonthConsumption = currentMonthConsumption;
+        this.readingTime = readingTime;
+    }
+
     public String getAccountNo() {
         return accountNo;
     }
