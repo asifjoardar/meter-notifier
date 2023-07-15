@@ -15,7 +15,6 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", cascade = { CascadeType.MERGE,
             CascadeType.PERSIST }, orphanRemoval = true, fetch = FetchType.LAZY)
-    //@JoinColumn(name = "customer_id")
     private List<MeterAccountDetails>meterAccountDetailsList = new ArrayList<>();
 
     public Customer() {
