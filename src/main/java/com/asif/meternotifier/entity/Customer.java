@@ -63,7 +63,6 @@ public class Customer {
         this.meterAccountDetailsList = meterAccountDetailsList;
     }
 
-    /*
     @Override
     public String toString() {
         return "Customer{" +
@@ -72,5 +71,5 @@ public class Customer {
                 ", enabled=" + enabled +
                 ", meterAccountDetailsList=" + meterAccountDetailsList +
                 '}';
-    }*/
+    }
 }

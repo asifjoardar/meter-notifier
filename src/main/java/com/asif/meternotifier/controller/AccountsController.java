@@ -51,4 +51,16 @@ public class AccountsController {
         model.addAttribute("customer", customer);
         return "customer-account-details";
     }
+    @GetMapping("/add-meter/{id}")
+    public String showAddMeter(@PathVariable("id") Long id, Model model){
+        model.addAttribute("id", id);
+        model.addAttribute("meterAccountDetails", new MeterAccountDetails());
+        return "add-meter";
+    }
+    @PostMapping("/add-meter/{id}")
+    public String addMeter(@PathVariable("id") Long id, MeterAccountDetails meterAccountDetails, Model model){
+        System.out.println(meterAccountDetails);
+        //todo: save new meter + account number into db
+        return "redirect:/customer-account-details/{id}";
+    }
 }

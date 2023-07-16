@@ -17,7 +17,7 @@
 <div class="container">
   <h2>List of Meters</h2>
   <hr/>
-  <a th:href="@{/}" class="btn btn-primary">Add Meter</a>
+  <a th:href="@{/add-meter/{id}(id=${customer.id})}" class="btn btn-primary">Add Meter</a>
   <br/><br/>
   <table class="table table-bordered table-striped" id="customerDetailsTable">
     <thead>
@@ -39,9 +39,9 @@
       <td th:if="${meterAccountDetails.notification}">On</td>
       <td th:if="${not meterAccountDetails.notification}">Off</td>
       <td>
-        <a th:href="@{/editMeter/${customer.id}}" class="btn btn-primary">Edit</a>
+        <a th:href="@{/edit-meter/${customer.id}}" class="btn btn-primary">Edit</a>
 
-        <a th:href="@{/deleteMeter/${customer.id}}" class="btn btn-danger ml-2">Delete</a>
+        <a th:href="@{/delete-meter/${customer.id}}" class="btn btn-danger ml-2">Delete</a>
       </td>
     </tr>
     </tbody>
