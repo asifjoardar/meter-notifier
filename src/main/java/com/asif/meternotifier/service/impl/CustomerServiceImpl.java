@@ -37,6 +37,9 @@ public class CustomerServiceImpl implements CustomerService {
                     meterAccountDetailsRepository.findByMeterNumber(meterAccountDetails.getMeterNumber()) != null){
                 throw new Exception("Account and Meter number already registered with this mail.");
             }
+            if(customerRepository.findByEmail(customer.getEmail()) != null){
+                throw new Exception("This email already registered");
+            }
             customer.getMeterAccountDetailsList().add(meterAccountDetails);
             customerRepository.save(customer);
             // token generate
@@ -46,6 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
             emailSender.send(customer.getEmail(), "Complete Registration!", "To confirm your account, please click here : "
                     +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());
             meterAccountDetails.setCustomer(customer);
+            meterAccountDetails.setBalance(1530.50);
             meterAccountDetailsRepository.save(meterAccountDetails);
 
         } catch (Exception e){

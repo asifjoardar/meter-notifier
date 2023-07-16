@@ -45,22 +45,10 @@ public class AccountsController {
             return "signup";
         }
     }
-
-    @GetMapping("/customer-info/{id}")
-    public String customerInfo(@PathVariable(value = "id") Long id, Model model){
-        Optional<Customer> customer = customerService.findCustomerById(id);
-        model.addAttribute("accountDetails", customer.get().getMeterAccountDetailsList());
-        System.out.println(customer.get().getMeterAccountDetailsList());
-        return "customer-info";
-    }
-
-    @GetMapping("/customer-account/{accountNumber}")
-    public String customerInfoDetails(@PathVariable("accountNumber") String accountNumber, Model model) throws JsonProcessingException {
-        MeterAccountDetails meterAccountDetails = meterAccountDetailsRepository.findByAccountNumber(accountNumber);
-        Data data = dataMapper.getDataFromMapper(accountNumber, meterAccountDetails.getMeterNumber());
-        model.addAttribute("customer", data);
-        model.addAttribute("notification", meterAccountDetails.isNotification());
-
+    @GetMapping("/customer-account-details/{id}")
+    public String customerInfoDetails(@PathVariable("id") Long id, Model model){
+        Customer customer = customerService.findCustomerById(id).get();
+        model.addAttribute("customer", customer);
         return "customer-account-details";
     }
 }

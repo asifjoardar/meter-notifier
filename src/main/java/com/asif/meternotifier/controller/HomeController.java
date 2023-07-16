@@ -19,11 +19,11 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String showLoginForm(Customer customer){
+    public String showSigninForm(Customer customer){
         return "signin";
     }
     @PostMapping("/")
-    public String login(@Valid Customer customer, BindingResult result, Model model){
+    public String signin(@Valid Customer customer, BindingResult result, Model model){
         if (result.hasErrors()) {
             return "signin";
         }
@@ -31,7 +31,7 @@ public class HomeController {
             return "redirect:/customer-info/"+customer.getId();
         }*/
         if (customerService.findCustomerByEmail(customer.getEmail()) != null){
-            return "redirect:/customer-info/"+customerService.findCustomerByEmail(customer.getEmail()).getId();
+            return "redirect:/customer-account-details/"+customerService.findCustomerByEmail(customer.getEmail()).getId();
         }
         return "redirect:/";
     }

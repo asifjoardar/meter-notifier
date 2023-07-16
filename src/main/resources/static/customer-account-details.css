@@ -5,113 +5,23 @@
     box-sizing: border-box;
     font-family: 'Poppins',sans-serif;
 }
-body{
-    background: #1abc9c;
-    overflow: hidden;
-    height: 100%;
-}
-::selection{
-    background: rgba(26,188,156,0.3);
-}
 .container{
-    max-width: 440px;
     padding: 0 20px;
-    margin: 170px auto;
+    margin: 10%;
 }
-.wrapper{
-    width: 100%;
-    background: #fff;
-    border-radius: 5px;
-    box-shadow: 0px 4px 10px 1px rgba(0,0,0,0.1);
-}
-.wrapper .title{
-    height: 90px;
-    background: #16a085;
-    border-radius: 5px 5px 0 0;
-    color: #fff;
-    font-size: 30px;
-    font-weight: 600;
+/*navbar*/
+.navbar {
     display: flex;
     align-items: center;
-    justify-content: center;
-}
-
-table {
-    border-collapse: collapse;
-    font-family: Tahoma, Geneva, sans-serif;
-    width: 100%;
-}
-table td {
-    padding: 15px;
-}
-table thead td {
-    background-color: #54585d;
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 13px;
-    border: 1px solid #54585d;
-}
-table tbody td {
-    color: #636363;
-    border: 1px solid #dddfe1;
-}
-table tbody tr {
-    background-color: #f9fafb;
-}
-table tbody tr:nth-child(odd) {
-    background-color: #ffffff;
-}
-
-.button-3 {
-    appearance: none;
-    background-color: #2ea44f;
-    border: 1px solid rgba(27, 31, 35, .15);
-    border-radius: 6px;
-    box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
-    box-sizing: border-box;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #16a085;;
     color: #fff;
-    cursor: pointer;
-    display: inline-block;
-    font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 20px;
-    padding: 6px 16px;
-    position: relative;
-    text-align: center;
-    text-decoration: none;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    vertical-align: middle;
-    white-space: nowrap;
-}
-.button-3:focus:not(:focus-visible):not(.focus-visible) {
-    box-shadow: none;
-    outline: none;
 }
 
-.button-3:hover {
-    background-color: #2c974b;
+.nav-links a {
+    color: #fff;
 }
-
-.button-3:focus {
-    box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
-    outline: none;
-}
-
-.button-3:disabled {
-    background-color: #94d3a2;
-    border-color: rgba(27, 31, 35, .1);
-    color: rgba(255, 255, 255, .8);
-    cursor: default;
-}
-
-.button-3:active {
-    background-color: #298e46;
-    box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
-}
-
-.notification {
-    text-align: center;
+.logo {
+    font-size: 32px;
 }

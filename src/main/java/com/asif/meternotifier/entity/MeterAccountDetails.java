@@ -13,6 +13,7 @@ public class MeterAccountDetails {
     private String accountNumber;
     @NotEmpty
     private String meterNumber;
+    private Double balance;
     private boolean notification;
     private boolean notified;
 
@@ -24,9 +25,15 @@ public class MeterAccountDetails {
     public MeterAccountDetails() {
     }
 
-    public MeterAccountDetails(String accountNumber, String meterNumber, boolean notification, boolean notified, Customer customer) {
+    public MeterAccountDetails(String accountNumber,
+                               String meterNumber,
+                               Double balance,
+                               boolean notification,
+                               boolean notified,
+                               Customer customer) {
         this.accountNumber = accountNumber;
         this.meterNumber = meterNumber;
+        this.balance = balance;
         this.notification = notification;
         this.notified = notified;
         this.customer = customer;
@@ -72,14 +79,22 @@ public class MeterAccountDetails {
         this.customer = customer;
     }
 
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
     @Override
     public String toString() {
         return "MeterAccountDetails{" +
                 "accountNumber='" + accountNumber + '\'' +
                 ", meterNumber='" + meterNumber + '\'' +
+                ", balance=" + balance +
                 ", notification=" + notification +
                 ", notified=" + notified +
-                ", customer=" + customer +
                 '}';
     }
 }

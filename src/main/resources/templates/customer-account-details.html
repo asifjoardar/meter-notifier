@@ -1,50 +1,65 @@
-<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Customer Info</title>
-  <link rel="stylesheet" href="../customer-account-details.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+  <title>Meter Notifier | Customer Details</title>
+  <link rel="stylesheet"
+        type="text/css"
+        href="../customer-account-details.css">
+  <link rel="stylesheet"
+        type="text/css"
+        href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css" />
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"/>
 </head>
-<body th:object="${customer}">
+
+<body style="background: #1abc9c;">
+<div th:insert="navbar :: navbar">  </div>
 <div class="container">
-  <div class="wrapper">
-    <div class="title"><span>Account Details</span></div>
-    <table>
-      <tbody>
-      <tr>
-        <td>Account No</td>
-        <td th:text="${customer.accountNo}">23</td>
-      </tr>
-      <tr>
-        <td>Meter No</td>
-        <td th:text="${customer.meterNo}">47</td>
-      </tr>
-      <tr>
-        <td>Balance</td>
-        <td th:text="${customer.balance}">12</td>
-      </tr>
-      <tr>
-        <td>Current Month Consumption</td>
-        <td th:text="${customer.currentMonthConsumption}">12</td>
-      </tr>
-      <tr>
-        <td>Reading Time</td>
-        <td th:text="${customer.readingTime}">12</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+  <h2>List of Meters</h2>
+  <hr/>
+  <a th:href="@{/}" class="btn btn-primary">Add Meter</a>
+  <br/><br/>
+  <table class="table table-bordered table-striped" id="customerDetailsTable">
+    <thead>
+    <tr>
+      <th>Email</th>
+      <th>Account No</th>
+      <th>Meter No</th>
+      <th>Balance</th>
+      <th>Notification</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="meterAccountDetails: ${customer.meterAccountDetailsList}">
+      <td th:text="${customer.email}"/>
+      <td th:text="${meterAccountDetails.accountNumber}" />
+      <td th:text="${meterAccountDetails.meterNumber}" />
+      <td th:text="${meterAccountDetails.balance}" />
+      <td th:if="${meterAccountDetails.notification}">On</td>
+      <td th:if="${not meterAccountDetails.notification}">Off</td>
+      <td>
+        <a th:href="@{/editMeter/${customer.id}}" class="btn btn-primary">Edit</a>
+
+        <a th:href="@{/deleteMeter/${customer.id}}" class="btn btn-danger ml-2">Delete</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>
-<div class="notification">
-  <form th:if="${not notification}">
-    <span>Want to get notified when your balance is less?</span>
-    <a th:href="@{/notification-starter/{accountNumber}(accountNumber=${customer.accountNo})}" type="button" class="button-3">Click Me!</a>
-  </form>
-  <form th:if="${notification}">
-    <span>Stop Notification Service!!!</span>
-    <a th:href="@{/notification-starter/{accountNumber}(accountNumber=${customer.accountNo})}" type="button" class="button-3">Stop!</a>
-  </form>
-</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $("#customerDetailsTable").DataTable({
+      'aoColumnDefs': [{
+        'bSortable': false,
+        'aTargets': [-1, -2, -6] /* start by the right */
+      }]
+    });
+  })
+</script>
 </body>
+
 </html>
