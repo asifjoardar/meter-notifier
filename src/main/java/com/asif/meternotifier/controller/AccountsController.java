@@ -59,8 +59,20 @@ public class AccountsController {
     }
     @PostMapping("/add-meter/{id}")
     public String addMeter(@PathVariable("id") Long id, MeterAccountDetails meterAccountDetails, Model model){
-        System.out.println(meterAccountDetails);
         //todo: save new meter + account number into db
+        return "redirect:/customer-account-details/{id}";
+    }
+    @GetMapping("edit-meter/{accountNumber}")
+    public String showEditMeter(@PathVariable("accountNumber") String accountNumber, Model model){
+        MeterAccountDetails meterAccountDetails = meterAccountDetailsRepository.findByAccountNumber(accountNumber);
+        model.addAttribute("meterAccountDetails", meterAccountDetails);
+        return "edit-meter";
+    }
+    @PostMapping("edit-meter/{accountNumber}")
+    public String editMeter(@PathVariable("accountNumber") String accountNumber,
+                            MeterAccountDetails meterAccountDetails,
+                            Model model){
+        //todo: update meter info
         return "redirect:/customer-account-details/{id}";
     }
 }

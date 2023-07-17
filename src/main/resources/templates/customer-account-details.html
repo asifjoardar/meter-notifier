@@ -39,9 +39,9 @@
       <td th:if="${meterAccountDetails.notification}">On</td>
       <td th:if="${not meterAccountDetails.notification}">Off</td>
       <td>
-        <a th:href="@{/edit-meter/${customer.id}}" class="btn btn-primary">Edit</a>
+        <a th:href="@{/edit-meter/{accountNumber}(accountNumber=${meterAccountDetails.accountNumber})}" class="btn btn-primary">Edit</a>
 
-        <a th:href="@{/delete-meter/${customer.id}}" class="btn btn-danger ml-2">Delete</a>
+        <a th:href="@{/delete-meter/{accountNumber}(accountNumber=${meterAccountDetails.accountNumber})}" class="btn btn-danger ml-2">Delete</a>
       </td>
     </tr>
     </tbody>

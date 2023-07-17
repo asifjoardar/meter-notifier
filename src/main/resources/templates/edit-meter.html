@@ -1,0 +1,72 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Meter Notifier | Edit Meter</title>
+  <link rel="stylesheet" href="../edit-meter.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body style="background: #1abc9c;">
+<div th:insert="navbar :: navbar">  </div>
+<div class="container">
+  <h2 style="text-align: center">Edit Meter Details</h2>
+  <section class="panel panel-default" style="border-color: #ffffff; background: transparent">
+    <div class="panel-body">
+      <form action="#"
+            class="form-horizontal"
+            method="post"
+            th:action="@{/edit-meter/{id}(id=${id})}"
+            th:object="${meterAccountDetails}"
+      >
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Email</label>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" placeholder="Email" th:field="*{customer.email}" readonly>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Account No</label>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" placeholder="Account No" th:field="*{accountNumber}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Meter No</label>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" placeholder="Meter No" th:field="*{meterNumber}">
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Low Balance Notification</label>
+          <div class="col-sm-3">
+            <label class="switch">
+              <input type="checkbox" th:checked="*{notification}" >
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label"></label>
+          <div class="col-sm-3">
+            <label class="control-label small">When the balance gets lower</label>
+            <input type="text" class="form-control" placeholder="balance">
+          </div>
+          <div class="col-sm-3">
+            <label class="control-label small">Send email to</label>
+            <input type="text" class="form-control" placeholder="email" th:field="*{customer.email}">
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9">
+            <button type="submit" class="btn btn-primary">Update</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>
+</body>
+</html>

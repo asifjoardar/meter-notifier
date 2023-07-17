@@ -10,7 +10,7 @@
     margin: 10%;
 }
 /*navbar*/
-.navbar {
+.nav-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
