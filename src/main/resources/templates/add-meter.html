@@ -33,6 +33,9 @@
                        required
                 >
             </div>
+            <div class="error" th:if="${error}">
+                <p th:text="${error}"></p>
+            </div>
             <div class="row button">
                 <input type="submit" value="Add">
             </div>

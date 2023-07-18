@@ -30,6 +30,9 @@
                 >
             </div>
             <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            <div class="error" th:if="${error}">
+                <p th:text="${error}"></p>
+            </div>
             <div class="row button">
                 <input type="submit" value="Signin">
             </div>

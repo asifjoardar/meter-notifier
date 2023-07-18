@@ -147,3 +147,7 @@ a {
 li {
     list-style: none;
 }
+.error{
+    color: red;
+    padding-bottom: 15px;
+}

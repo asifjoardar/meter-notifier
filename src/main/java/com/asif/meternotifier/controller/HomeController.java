@@ -3,6 +3,7 @@ package com.asif.meternotifier.controller;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
 import com.asif.meternotifier.service.CustomerService;
+import com.asif.meternotifier.validation.Validation;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class HomeController {
 
     private CustomerService customerService;
+    private Validation validation;
 
-    public HomeController(CustomerService customerService){
+    public HomeController(CustomerService customerService, Validation validation){
         this.customerService = customerService;
+        this.validation = validation;
     }
 
     @GetMapping("/")
@@ -27,13 +30,16 @@ public class HomeController {
         if (result.hasErrors()) {
             return "signin";
         }
-        /*if (customerService.findCustomerByEmail(customer.getEmail()).isEnabled()){
-            return "redirect:/customer-info/"+customer.getId();
-        }*/
-        if (customerService.findCustomerByEmail(customer.getEmail()) != null){
-            return "redirect:/customer-account-details/"+customerService.findCustomerByEmail(customer.getEmail()).getId();
+        if (validation.emailExist(customer.getEmail())){
+            if(validation.emailEnabled(customerService.findCustomerByEmail(customer.getEmail()).getId())){
+                return "redirect:/customer-account-details/"+customerService.findCustomerByEmail(customer.getEmail()).getId();
+            } else{
+                return "redirect:/email-verification/"+customerService.findCustomerByEmail(customer.getEmail()).getId();
+            }
+        } else {
+            model.addAttribute("error", "We couldn't find an account with that email address");
+            return "signin";
         }
-        return "redirect:/";
     }
     @GetMapping("/signup")
     public String showRegistrationForm(Customer customer, MeterAccountDetails meterAccountDetails){
@@ -44,8 +50,13 @@ public class HomeController {
         if (result.hasErrors()) {
             return "signup";
         }
-        customerService.saveCustomer(customer, meterAccountDetails);
-        return "redirect:/email-verification/"+customer.getId();
+        if(!validation.accountMeterExist(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber())) {
+            customerService.saveCustomer(customer, meterAccountDetails);
+            return "redirect:/email-verification/"+customer.getId();
+        } else{
+            model.addAttribute("error", "Entered account / meter no already in use");
+            return "signup";
+        }
     }
 
     @GetMapping("/email-verification/{id}")
