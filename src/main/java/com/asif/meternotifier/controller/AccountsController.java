@@ -75,4 +75,13 @@ public class AccountsController {
         //todo: update meter info
         return "redirect:/customer-account-details/{id}";
     }
+    @GetMapping("delete-confirmation/{id}") /*path: /{id}/{generatedValue}/{acNo}/{MeterNo}*/
+    public String deleteMeterConf(@PathVariable("id") Long id){
+        return "delete-meter-confirmation";
+    }
+    @PostMapping("delete-meter/{id}/{accountNumber}/{meterNumber}")
+    public String deleteMeter(@PathVariable("accountNumber") String accountNumber){
+        //todo: delete a meter from the list
+        return "redirect:/customer-account-details/{id}";
+    }
 }

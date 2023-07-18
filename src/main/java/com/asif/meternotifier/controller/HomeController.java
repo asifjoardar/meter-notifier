@@ -45,6 +45,12 @@ public class HomeController {
             return "signup";
         }
         customerService.saveCustomer(customer, meterAccountDetails);
-        return "redirect:/";
+        return "redirect:/email-verification/"+customer.getId();
+    }
+
+    @GetMapping("/email-verification/{id}")
+    public String emailVerification(@PathVariable("id") Long id, Model model){
+        model.addAttribute("email", customerService.findCustomerById(id).get().getEmail());
+        return "email-verification-message";
     }
 }

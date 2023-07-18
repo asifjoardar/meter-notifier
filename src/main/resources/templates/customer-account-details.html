@@ -10,6 +10,7 @@
         href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css" />
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"/>
+
 </head>
 
 <body style="background: #1abc9c;">
@@ -40,12 +41,13 @@
       <td th:if="${not meterAccountDetails.notification}">Off</td>
       <td>
         <a th:href="@{/edit-meter/{accountNumber}(accountNumber=${meterAccountDetails.accountNumber})}" class="btn btn-primary">Edit</a>
-
-        <a th:href="@{/delete-meter/{accountNumber}(accountNumber=${meterAccountDetails.accountNumber})}" class="btn btn-danger ml-2">Delete</a>
+        <a th:href="@{/delete-confirmation/{id}(id=${customer.id})}" class="btn btn-danger ml-2">Delete</a>
+        <!--<a th:href="@{/delete-confirmation/{id}(id=${customer.id})/{accountNumber}(accountNumber=${meterAccountDetails.accountNumber})/{meterNumber}(meterNumber=${meterAccountDetails.meterNumber})}" class="btn btn-danger ml-2">Delete</a>-->
       </td>
     </tr>
     </tbody>
   </table>
+  </div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -58,8 +60,7 @@
         'aTargets': [-1, -2, -6] /* start by the right */
       }]
     });
-  })
+  });
 </script>
 </body>
-
 </html>
