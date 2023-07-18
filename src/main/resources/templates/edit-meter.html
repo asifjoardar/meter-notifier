@@ -16,7 +16,7 @@
       <form action="#"
             class="form-horizontal"
             method="post"
-            th:action="@{/edit-meter/{id}(id=${id})}"
+            th:action="@{/edit-meter/{accountNumber}(accountNumber=${meterAccountDetails.accountNumber})}"
             th:object="${meterAccountDetails}"
       >
         <div class="form-group">
@@ -42,7 +42,7 @@
           <label class="col-sm-3 control-label">Low Balance Notification</label>
           <div class="col-sm-3">
             <label class="switch">
-              <input type="checkbox" th:checked="*{notification}" th:required="*{notification}">
+              <input type="checkbox" th:checked="*{notification.status}" th:required="*{notification.status}">
               <span class="slider"></span>
             </label>
           </div>
@@ -51,11 +51,11 @@
           <label class="col-sm-3 control-label"></label>
           <div class="col-sm-3">
             <label class="control-label small">When the balance gets lower</label>
-            <input type="text" class="form-control" placeholder="balance">
+            <input type="text" class="form-control" placeholder="balance" th:field="*{notification.minimumBalance}">
           </div>
           <div class="col-sm-3">
             <label class="control-label small">Send email to</label>
-            <input type="text" class="form-control" placeholder="email" th:field="*{customer.email}">
+            <input type="text" class="form-control" placeholder="email" th:field="*{notification.emailToSendNotification}">
           </div>
         </div>
         <hr>

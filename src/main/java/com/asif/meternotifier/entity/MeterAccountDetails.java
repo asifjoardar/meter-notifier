@@ -14,18 +14,19 @@ public class MeterAccountDetails {
     @NotEmpty
     private String meterNumber;
     private Double balance;
-    private boolean notification;
-    private boolean notified;
+    @OneToOne(targetEntity = Notification.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(nullable = true, name = "notification_id")
+    private Notification notification;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "customer_id", nullable = true)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     public MeterAccountDetails() {
     }
 
-    public MeterAccountDetails(String accountNumber,
+   /* public MeterAccountDetails(String accountNumber,
                                String meterNumber,
                                Double balance,
                                boolean notification,
@@ -36,6 +37,14 @@ public class MeterAccountDetails {
         this.balance = balance;
         this.notification = notification;
         this.notified = notified;
+        this.customer = customer;
+    }*/
+
+    public MeterAccountDetails(String accountNumber, String meterNumber, Double balance, Notification notification, Customer customer) {
+        this.accountNumber = accountNumber;
+        this.meterNumber = meterNumber;
+        this.balance = balance;
+        this.notification = notification;
         this.customer = customer;
     }
 
@@ -55,7 +64,7 @@ public class MeterAccountDetails {
         this.meterNumber = meterNumber;
     }
 
-    public boolean isNotification() {
+/*    public boolean isNotification() {
         return notification;
     }
 
@@ -69,7 +78,7 @@ public class MeterAccountDetails {
 
     public void setNotified(boolean notified) {
         this.notified = notified;
-    }
+    }*/
 
     public Customer getCustomer() {
         return customer;
@@ -87,6 +96,14 @@ public class MeterAccountDetails {
         this.balance = balance;
     }
 
+    public Notification getNotification() {
+        return notification;
+    }
+
+    public void setNotification(Notification notification) {
+        this.notification = notification;
+    }
+
     @Override
     public String toString() {
         return "MeterAccountDetails{" +
@@ -94,7 +111,7 @@ public class MeterAccountDetails {
                 ", meterNumber='" + meterNumber + '\'' +
                 ", balance=" + balance +
                 ", notification=" + notification +
-                ", notified=" + notified +
+                ", customer=" + customer +
                 '}';
     }
 }

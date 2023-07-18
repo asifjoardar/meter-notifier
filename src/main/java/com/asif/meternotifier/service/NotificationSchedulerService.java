@@ -36,20 +36,20 @@ public class NotificationSchedulerService {
     Logger logger = LoggerFactory.getLogger(MeterAccountDetails.class);
     //@Scheduled(fixedRate = 2000)
     public void execute() throws JsonProcessingException {
-        List<MeterAccountDetails> meterAccountDetailsListTrue = meterAccountDetailsRepository.findAllByNotification(true);
-        List<MeterAccountDetails> meterAccountDetailsListFalse = meterAccountDetailsRepository.findAllByNotification(false);
+        List<MeterAccountDetails> meterAccountDetailsListTrue = meterAccountDetailsRepository.findAllByNotification_Status(true);
+        List<MeterAccountDetails> meterAccountDetailsListFalse = meterAccountDetailsRepository.findAllByNotification_Status(false);
         for (MeterAccountDetails meterAccountDetails:meterAccountDetailsListFalse){
             Data data = dataMapper.getDataFromMapper(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber());
-            if(data.getBalance() > 1500.00 && meterAccountDetails.isNotified() == true){
-                meterAccountDetails.setNotified(false);
+            if(data.getBalance() > 1500.00 && meterAccountDetails.getNotification().isNotified()){
+                meterAccountDetails.getNotification().setNotified(false);
                 meterAccountDetailsRepository.save(meterAccountDetails);
             }
         }
         for (MeterAccountDetails meterAccountDetails:meterAccountDetailsListTrue){
             Data data = dataMapper.getDataFromMapper(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber());
-            if(data.getBalance() <= 1500.00 && meterAccountDetails.isNotified() == false){
+            if(data.getBalance() <= 1500.00 && !meterAccountDetails.getNotification().isNotified()){
                 emailSender.send(meterAccountDetails.getCustomer().getEmail(), "Balance is low", "Dear Customer your current balance is "+data.getBalance()+" taka please recharge.");
-                meterAccountDetails.setNotified(true);
+                meterAccountDetails.getNotification().setNotified(true);
                 meterAccountDetailsRepository.save(meterAccountDetails);
             }
             logger.info("logging date: " + meterAccountDetails);

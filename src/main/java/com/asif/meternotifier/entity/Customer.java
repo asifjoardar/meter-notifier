@@ -1,5 +1,6 @@
 package com.asif.meternotifier.entity;
 
+import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -17,8 +18,8 @@ public class Customer {
     private String email;
     private boolean enabled;
 
-    @OneToMany(mappedBy = "customer", cascade = { CascadeType.MERGE,
-            CascadeType.PERSIST }, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Column(nullable = true)
     private List<MeterAccountDetails>meterAccountDetailsList = new ArrayList<>();
 
     public Customer() {
