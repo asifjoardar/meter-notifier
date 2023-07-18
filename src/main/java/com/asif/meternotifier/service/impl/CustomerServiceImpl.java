@@ -70,6 +70,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
     @Override
     public void updateCustomer(MeterAccountDetails meterAccountDetails){
+        Customer customer = customerRepository.findByEmail(meterAccountDetails.getCustomer().getEmail());
+        Notification notification = meterAccountDetails.getNotification();
+        meterAccountDetails = meterAccountDetailsRepository.findByAccountNumber(meterAccountDetails.getAccountNumber());
+        notification.setId(meterAccountDetails.getNotification().getId());
+        notificationRepository.save(notification);
+        meterAccountDetails.setNotification(notification);
+        meterAccountDetails.setCustomer(customer);
         meterAccountDetailsRepository.save(meterAccountDetails);
     }
 

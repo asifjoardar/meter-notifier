@@ -75,7 +75,7 @@ public class AccountsController {
                             MeterAccountDetails meterAccountDetails,
                             Model model){
         customerService.updateCustomer(meterAccountDetails);
-        return "redirect:/customer-account-details/"+meterAccountDetails.getCustomer().getId();
+        return "redirect:/customer-account-details/"+meterAccountDetailsRepository.findByAccountNumber(meterAccountDetails.getAccountNumber()).getCustomer().getId();
     }
     @GetMapping("delete-confirmation/{accountNumber}") /*path: /{id}/{generatedValue}/{acNo}/{MeterNo}*/
     public String deleteMeterConf(@PathVariable("accountNumber") String accountNumber, Model model){
