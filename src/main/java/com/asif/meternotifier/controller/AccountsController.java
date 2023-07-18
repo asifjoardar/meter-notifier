@@ -59,7 +59,7 @@ public class AccountsController {
     }
     @PostMapping("/add-meter/{id}")
     public String addMeter(@PathVariable("id") Long id, MeterAccountDetails meterAccountDetails, Model model){
-        //todo: save new meter + account number into db
+        customerService.saveCustomer(customerService.findCustomerById(id).get(), meterAccountDetails);
         return "redirect:/customer-account-details/{id}";
     }
     @GetMapping("edit-meter/{accountNumber}")

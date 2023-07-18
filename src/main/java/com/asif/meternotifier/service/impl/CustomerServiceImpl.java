@@ -35,19 +35,20 @@ public class CustomerServiceImpl implements CustomerService {
         try{
             if(meterAccountDetailsRepository.findByAccountNumber(meterAccountDetails.getAccountNumber()) != null &&
                     meterAccountDetailsRepository.findByMeterNumber(meterAccountDetails.getMeterNumber()) != null){
-                throw new Exception("Account and Meter number already registered with this mail.");
+                throw new Exception("Account and Meter number already registered.");
             }
-            if(customerRepository.findByEmail(customer.getEmail()) != null){
-                throw new Exception("This email already registered");
+            if(customerRepository.findByEmail(customer.getEmail()) == null){
+                customerRepository.save(customer);
+                // token generate
+                ConfirmationToken confirmationToken = new ConfirmationToken(customer);
+                confirmationTokenRepository.save(confirmationToken);
+                // email sender
+                emailSender.send(customer.getEmail(), "Complete Registration!", "To confirm your account, please click here : "
+                        +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());
             }
             customer.getMeterAccountDetailsList().add(meterAccountDetails);
             customerRepository.save(customer);
-            // token generate
-            ConfirmationToken confirmationToken = new ConfirmationToken(customer);
-            confirmationTokenRepository.save(confirmationToken);
-            // email sender
-            emailSender.send(customer.getEmail(), "Complete Registration!", "To confirm your account, please click here : "
-                    +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());
+
             meterAccountDetails.setCustomer(customer);
             meterAccountDetails.setBalance(1530.50);
             meterAccountDetailsRepository.save(meterAccountDetails);
