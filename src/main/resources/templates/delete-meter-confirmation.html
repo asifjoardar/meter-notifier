@@ -14,8 +14,8 @@
     <div class="r-2">Do you really want to delete these records? This process cannot be undone.</div>
     <hr>
     <div class="r-3">
-        <button class="btn-1 cancel">Cancel</button>
-        <button class="btn-1 delete">Delete</button>
+        <a th:href="@{/customer-account-details/{id}(id=${id})}" class="btn-1 cancel">Cancel</a>
+        <a  th:href="@{/delete-meter/{accountNumber}(accountNumber=${accountNumber})}" class="btn-1 delete">Delete</a>
     </div>
 </div>
 </body>

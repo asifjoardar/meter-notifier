@@ -8,6 +8,7 @@ import com.asif.meternotifier.service.CustomerService;
 import com.asif.meternotifier.util.DataMapper;
 import com.asif.meternotifier.util.RequestSender;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
+@Transactional
 public class AccountsController {
     private CustomerService customerService;
     private MeterAccountDetailsRepository meterAccountDetailsRepository;
@@ -75,13 +77,16 @@ public class AccountsController {
         //todo: update meter info
         return "redirect:/customer-account-details/{id}";
     }
-    @GetMapping("delete-confirmation/{id}") /*path: /{id}/{generatedValue}/{acNo}/{MeterNo}*/
-    public String deleteMeterConf(@PathVariable("id") Long id){
+    @GetMapping("delete-confirmation/{accountNumber}") /*path: /{id}/{generatedValue}/{acNo}/{MeterNo}*/
+    public String deleteMeterConf(@PathVariable("accountNumber") String accountNumber, Model model){
+        model.addAttribute("accountNumber", accountNumber);
+        model.addAttribute("id", meterAccountDetailsRepository.findByAccountNumber(accountNumber).getCustomer().getId());
         return "delete-meter-confirmation";
     }
-    @PostMapping("delete-meter/{id}/{accountNumber}/{meterNumber}")
+    @GetMapping("delete-meter/{accountNumber}")
     public String deleteMeter(@PathVariable("accountNumber") String accountNumber){
-        //todo: delete a meter from the list
-        return "redirect:/customer-account-details/{id}";
+        Customer customer = meterAccountDetailsRepository.findByAccountNumber(accountNumber).getCustomer();
+        meterAccountDetailsRepository.deleteByAccountNumber(accountNumber);
+        return "redirect:/customer-account-details/"+customer.getId();
     }
 }

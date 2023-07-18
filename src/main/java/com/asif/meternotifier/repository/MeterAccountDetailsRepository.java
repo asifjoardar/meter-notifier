@@ -9,4 +9,5 @@ public interface MeterAccountDetailsRepository extends JpaRepository<MeterAccoun
     MeterAccountDetails findByAccountNumber(String accountNumber);
     MeterAccountDetails findByMeterNumber(String meterNumber);
     List<MeterAccountDetails> findAllByNotification(boolean notification);
+    void deleteByAccountNumber(String accountNumber);
 }

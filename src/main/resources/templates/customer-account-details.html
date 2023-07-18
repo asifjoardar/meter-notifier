@@ -41,7 +41,7 @@
       <td th:if="${not meterAccountDetails.notification}">Off</td>
       <td>
         <a th:href="@{/edit-meter/{accountNumber}(accountNumber=${meterAccountDetails.accountNumber})}" class="btn btn-primary">Edit</a>
-        <a th:href="@{/delete-confirmation/{id}(id=${customer.id})}" class="btn btn-danger ml-2">Delete</a>
+        <a th:href="@{/delete-confirmation/{accountNumber}(accountNumber=${meterAccountDetails.accountNumber})}" class="btn btn-danger ml-2">Delete</a>
         <!--<a th:href="@{/delete-confirmation/{id}(id=${customer.id})/{accountNumber}(accountNumber=${meterAccountDetails.accountNumber})/{meterNumber}(meterNumber=${meterAccountDetails.meterNumber})}" class="btn btn-danger ml-2">Delete</a>-->
       </td>
     </tr>
