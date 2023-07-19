@@ -33,7 +33,7 @@ public class AccountsController {
     @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
     public String confirmUserAccount(@RequestParam("token")String confirmationToken) {
         if(customerService.confirmEmail(confirmationToken)){
-            return "redirect:/";
+            return "email-verified";
         }
         else {
             return "404";

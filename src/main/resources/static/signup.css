@@ -96,7 +96,7 @@ form .row input::placeholder{
     cursor: pointer;
 }
 form .button input:hover{
-    background: #12876f;
+    background: black;
 }
 .wrapper form .signup-link{
     text-align: center;
@@ -116,7 +116,8 @@ form .signup-link a:hover{
     text-align: center;
 }
 .login label a{
-    color: #009579;
+    font-weight: 400;
+    color: #0054f7;
     cursor: pointer;
     text-align: center;
 }

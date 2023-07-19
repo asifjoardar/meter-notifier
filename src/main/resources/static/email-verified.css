@@ -27,7 +27,7 @@ html, body{
     transform: translate(-50%, -50%);
 
     background: #fff;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 red;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 green;
     border-radius: 10px;
     padding: 20px;
 }
@@ -44,14 +44,6 @@ html, body{
     justify-content: center;
     align-items: center;
     height: 40%;
-}
-.container .wrapper .r-3{
-    text-align: center;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    height: 30%;
-    width: 100%
 }
 
 hr {
@@ -71,9 +63,6 @@ hr {
 .btn-1:hover{
     background: #257f6c;
 }
-.cancel{
-    background: gray;
-}
-.delete{
-    background: red;
+.signin{
+    background: blue;
 }

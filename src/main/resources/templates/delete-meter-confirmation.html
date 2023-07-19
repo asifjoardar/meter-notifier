@@ -10,13 +10,15 @@
 <body>
 <div th:insert="navbar :: navbar">  </div>
 <div class="container">
-    <div class="r-1"><h2>Are You Sure?</h2></div>
-    <hr/>
-    <div class="r-2">Do you really want to delete these records? This process cannot be undone.</div>
-    <hr>
-    <div class="r-3">
-        <a th:href="@{/customer-account-details/{id}(id=${id})}" class="btn-1 cancel">Cancel</a>
-        <a  th:href="@{/delete-meter/{accountNumber}(accountNumber=${accountNumber})}" class="btn-1 delete">Delete</a>
+    <div class="wrapper">
+        <div class="r-1"><h2>Are You Sure?</h2></div>
+        <hr/>
+        <div class="r-2"><p>Do you really want to delete these records? This process cannot be undone.</p></div>
+        <hr>
+        <div class="r-3">
+            <a th:href="@{/customer-account-details/{id}(id=${id})}" class="btn-1 cancel">Cancel</a>
+            <a th:href="@{/delete-meter/{accountNumber}(accountNumber=${accountNumber})}" class="btn-1 delete">Delete</a>
+        </div>
     </div>
 </div>
 </body>
