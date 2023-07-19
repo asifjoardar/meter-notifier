@@ -49,6 +49,7 @@ public class NotificationSchedulerService {
             Data data = dataMapper.getDataFromMapper(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber());
             if(data.getBalance() > meterAccountDetails.getNotification().getMinimumBalance() && meterAccountDetails.getNotification().isNotified()){
                 meterAccountDetails.getNotification().setNotified(false);
+                meterAccountDetails.setBalance(data.getBalance());
                 meterAccountDetailsRepository.save(meterAccountDetails);
             }
         }
