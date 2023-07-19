@@ -25,21 +25,6 @@ public class MeterAccountDetails {
 
     public MeterAccountDetails() {
     }
-
-   /* public MeterAccountDetails(String accountNumber,
-                               String meterNumber,
-                               Double balance,
-                               boolean notification,
-                               boolean notified,
-                               Customer customer) {
-        this.accountNumber = accountNumber;
-        this.meterNumber = meterNumber;
-        this.balance = balance;
-        this.notification = notification;
-        this.notified = notified;
-        this.customer = customer;
-    }*/
-
     public MeterAccountDetails(String accountNumber, String meterNumber, Double balance, Notification notification, Customer customer) {
         this.accountNumber = accountNumber;
         this.meterNumber = meterNumber;
@@ -63,22 +48,6 @@ public class MeterAccountDetails {
     public void setMeterNumber(String meterNumber) {
         this.meterNumber = meterNumber;
     }
-
-/*    public boolean isNotification() {
-        return notification;
-    }
-
-    public void setNotification(boolean notification) {
-        this.notification = notification;
-    }
-
-    public boolean isNotified() {
-        return notified;
-    }
-
-    public void setNotified(boolean notified) {
-        this.notified = notified;
-    }*/
 
     public Customer getCustomer() {
         return customer;
