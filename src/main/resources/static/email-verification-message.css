@@ -44,6 +44,10 @@ html, body{
     width: 40%;
     margin-top: 5%;
 }
+.container .r-3 a{
+    color: blue;
+    cursor: pointer;
+}
 
 hr {
     width:70%;
