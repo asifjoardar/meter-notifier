@@ -59,7 +59,7 @@ public class CustomerServiceImpl implements CustomerService {
         ConfirmationToken confirmationToken = new ConfirmationToken(customer);
         confirmationTokenRepository.save(confirmationToken);
         // email sender
-        emailSender.send(customer.getEmail(), "Complete Registration!", "To confirm your account, please click here : "
+        emailSender.send(customer.getEmail(), "Validate Your Email Address - Action Required", "To confirm your account, please click here : "
                 +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());
     }
 
