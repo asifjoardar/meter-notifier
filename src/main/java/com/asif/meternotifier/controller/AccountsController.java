@@ -1,10 +1,13 @@
 package com.asif.meternotifier.controller;
 
+import com.asif.meternotifier.dto.Data;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
 import com.asif.meternotifier.repository.MeterAccountDetailsRepository;
 import com.asif.meternotifier.service.CustomerService;
+import com.asif.meternotifier.util.DataMapper;
 import com.asif.meternotifier.validation.Validation;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,12 +19,15 @@ public class AccountsController {
     private CustomerService customerService;
     private MeterAccountDetailsRepository meterAccountDetailsRepository;
     private Validation validation;
+    private DataMapper dataMapper;
     public AccountsController(CustomerService customerService,
                               MeterAccountDetailsRepository meterAccountDetailsRepository,
-                              Validation validation){
+                              Validation validation,
+                              DataMapper dataMapper){
         this.customerService = customerService;
         this.meterAccountDetailsRepository = meterAccountDetailsRepository;
         this.validation = validation;
+        this.dataMapper = dataMapper;
     }
 
     @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
@@ -54,10 +60,17 @@ public class AccountsController {
         }
     }
     @PostMapping("/add-meter/{id}")
-    public String addMeter(@PathVariable("id") Long id, MeterAccountDetails meterAccountDetails, Model model){
+    public String addMeter(@PathVariable("id") Long id, MeterAccountDetails meterAccountDetails, Model model) throws JsonProcessingException {
         if(!validation.accountMeterExist(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber())){
-            customerService.saveCustomer(customerService.findCustomerById(id).get(), meterAccountDetails);
-            return "redirect:/customer-account-details/{id}";
+            Data data = dataMapper.getDataFromMapper(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber());
+            if(data == null){
+                model.addAttribute("error", "The Account No. does not exist");
+                return "add-meter";
+            } else {
+                meterAccountDetails.setBalance(data.getBalance());
+                customerService.saveCustomer(customerService.findCustomerById(id).get(), meterAccountDetails);
+                return "redirect:/customer-account-details/{id}";
+            }
         }else{
             model.addAttribute("error", "Entered account / meter no already in use");
             return "add-meter";
