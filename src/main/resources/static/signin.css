@@ -5,18 +5,20 @@
     box-sizing: border-box;
     font-family: 'Poppins',sans-serif;
 }
-
 body{
-    background: #1abc9c;
+    background: #c1c1c1;
     overflow: hidden;
+    height: 100%;
 }
 ::selection{
     background: rgba(26,188,156,0.3);
 }
 .container{
     max-width: 440px;
-    padding: 0 20px;
-    margin: 170px auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 .wrapper{
     width: 100%;
@@ -26,11 +28,11 @@ body{
 }
 .wrapper .title{
     height: 90px;
-    background: #16a085;
+    background: #333333;
     border-radius: 5px 5px 0 0;
     color: #fff;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 500;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -67,8 +69,8 @@ form .row input::placeholder{
     height: 100%;
     color: #fff;
     font-size: 18px;
-    background: #16a085;
-    border: 1px solid #16a085;
+    background: #333333;
+    border: 1px solid #333333;
     border-radius: 5px 0 0 5px;
     display: flex;
     align-items: center;
@@ -90,8 +92,8 @@ form .row input::placeholder{
     font-size: 20px;
     font-weight: 400;
     padding-left: 0px;
-    background: #16a085;
-    border: 1px solid #16a085;
+    background: #333333;
+    border: 1px solid #333333;
     cursor: pointer;
 }
 form .button input:hover{
@@ -109,31 +111,6 @@ form .button input:hover{
 }
 .signup label a:hover{
     text-decoration: underline;
-}
-
-/*navbar*/
-.nav-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-    background-color: #16a085;;
-    color: #fff;
-}
-
-.nav-links a {
-    color: #fff;
-}
-.logo {
-    font-size: 32px;
-}
-
-a {
-    text-decoration: none;
-}
-
-li {
-    list-style: none;
 }
 
 .error{

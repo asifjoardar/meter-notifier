@@ -7,7 +7,7 @@
 html, body{
     height: 100%;
     width: 100%;
-    background: #1abc9c;
+    background: #c1c1c1;
     overflow: hidden;
 }
 .container{
@@ -57,7 +57,7 @@ hr {
     font-size: 15px;
     font-weight: 400;
     padding: 5px;
-    border: 1px solid #16a085;
+    border: 1px solid #fff;
     cursor: pointer;
     border-radius: 5px;
 }
@@ -69,29 +69,4 @@ hr {
 }
 .delete{
     background: red;
-}
-
-/*navbar*/
-.nav-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-    background-color: #16a085;;
-    color: #fff;
-}
-
-.nav-links a {
-    color: #fff;
-}
-.logo {
-    font-size: 32px;
-}
-
-a {
-    text-decoration: none;
-}
-
-li {
-    list-style: none;
 }

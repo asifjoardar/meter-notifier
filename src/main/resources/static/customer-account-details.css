@@ -9,19 +9,3 @@
     padding: 0 20px;
     margin: 10%;
 }
-/*navbar*/
-.nav-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-    background-color: #16a085;;
-    color: #fff;
-}
-
-.nav-links a {
-    color: #fff;
-}
-.logo {
-    font-size: 32px;
-}
