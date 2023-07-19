@@ -16,11 +16,11 @@ import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
-    private CustomerRepository customerRepository;
-    private MeterAccountDetailsRepository meterAccountDetailsRepository;
-    private ConfirmationTokenRepository confirmationTokenRepository;
-    private EmailSender emailSender;
-    private NotificationRepository notificationRepository;
+    private final CustomerRepository customerRepository;
+    private final MeterAccountDetailsRepository meterAccountDetailsRepository;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
+    private final EmailSender emailSender;
+    private final NotificationRepository notificationRepository;
 
     public CustomerServiceImpl(CustomerRepository customerRepository,
                                ConfirmationTokenRepository confirmationTokenRepository,
@@ -36,38 +36,33 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void saveCustomer(Customer customer, MeterAccountDetails meterAccountDetails){
-        try{
-            if(meterAccountDetailsRepository.findByAccountNumber(meterAccountDetails.getAccountNumber()) != null &&
-                    meterAccountDetailsRepository.findByMeterNumber(meterAccountDetails.getMeterNumber()) != null){
-                throw new Exception("Account and Meter number already registered.");
-            }
-            if(customerRepository.findByEmail(customer.getEmail()) == null){
-                customerRepository.save(customer);
-                // token generate
-                ConfirmationToken confirmationToken = new ConfirmationToken(customer);
-                confirmationTokenRepository.save(confirmationToken);
-                // email sender
-                emailSender.send(customer.getEmail(), "Complete Registration!", "To confirm your account, please click here : "
-                        +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());
-            }
-
-            Notification notification = new Notification();
-            notification.setEmailToSendNotification(customer.getEmail());
-            notificationRepository.save(notification);
-
-            meterAccountDetailsRepository.save(meterAccountDetails);
-            customer.getMeterAccountDetailsList().add(meterAccountDetails);
+        if(customerRepository.findByEmail(customer.getEmail()) == null){
             customerRepository.save(customer);
-
-            meterAccountDetails.setCustomer(customer);
-            meterAccountDetails.setBalance(1530.50);
-            meterAccountDetails.setNotification(notification);
-            meterAccountDetailsRepository.save(meterAccountDetails);
-
-        } catch (Exception e){
-            System.out.println(e);
+            generateAndSendToken(customer);
         }
+
+        Notification notification = new Notification();
+        notification.setEmailToSendNotification(customer.getEmail());
+        notificationRepository.save(notification);
+
+        meterAccountDetailsRepository.save(meterAccountDetails);
+        customer.getMeterAccountDetailsList().add(meterAccountDetails);
+        customerRepository.save(customer);
+
+        meterAccountDetails.setCustomer(customer);
+        meterAccountDetails.setNotification(notification);
+        meterAccountDetailsRepository.save(meterAccountDetails);
     }
+
+    private void generateAndSendToken(Customer customer) {
+        // token generate
+        ConfirmationToken confirmationToken = new ConfirmationToken(customer);
+        confirmationTokenRepository.save(confirmationToken);
+        // email sender
+        emailSender.send(customer.getEmail(), "Complete Registration!", "To confirm your account, please click here : "
+                +"http://localhost:8080/confirm-account?token="+confirmationToken.getConfirmationToken());
+    }
+
     @Override
     public void updateCustomer(MeterAccountDetails meterAccountDetails){
         Customer customer = customerRepository.findByEmail(meterAccountDetails.getCustomer().getEmail());
@@ -93,9 +88,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public boolean confirmEmail(String confirmationToken) {
         ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
-
-        if(token != null)
-        {
+        if(token != null) {
             Customer customer = customerRepository.findByEmail(token.getCustomer().getEmail());
             customer.setEnabled(true);
             customerRepository.save(customer);
