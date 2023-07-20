@@ -34,7 +34,7 @@ public class NotificationSchedulerService {
         for (MeterAccountDetails meterAccountDetails:meterAccountDetailsList){
             Data data = dataMapper.getDataFromMapper(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber());
             if(data.getBalance() <= meterAccountDetails.getNotification().getMinimumBalance() && !meterAccountDetails.getNotification().isNotified()){
-                emailSender.send(meterAccountDetails.getCustomer().getEmail(),
+                emailSender.send(meterAccountDetails.getNotification().getEmailToSendNotification(),
                         "Low Meter Balance Alert for Meter No: "+meterAccountDetails.getMeterNumber(),
                         "Dear Customer, your current balance is "+data.getBalance()+". Kindly recharge your account to avoid service disruptions.");
                 meterAccountDetails.getNotification().setNotified(true);
