@@ -21,33 +21,36 @@ public class NotificationSchedulerService {
 
     public NotificationSchedulerService(MeterAccountDetailsRepository meterAccountDetailsRepository,
                                         EmailSender emailSender,
-                                        DataMapper dataMapper){
+                                        DataMapper dataMapper) {
         this.meterAccountDetailsRepository = meterAccountDetailsRepository;
         this.emailSender = emailSender;
         this.dataMapper = dataMapper;
     }
+
     Logger logger = LoggerFactory.getLogger(MeterAccountDetails.class);
+
     //@Scheduled(fixedRate = 10000)
     @Scheduled(cron = "0 0 12 * * ?") // every day at 12pm(noon)
     public void day() throws JsonProcessingException {
         List<MeterAccountDetails> meterAccountDetailsList = meterAccountDetailsRepository.findAllByNotification_Status(true);
-        for (MeterAccountDetails meterAccountDetails:meterAccountDetailsList){
+        for (MeterAccountDetails meterAccountDetails : meterAccountDetailsList) {
             Data data = dataMapper.getDataFromMapper(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber());
-            if(data.getBalance() <= meterAccountDetails.getNotification().getMinimumBalance() && !meterAccountDetails.getNotification().isNotified()){
+            if (data.getBalance() <= meterAccountDetails.getNotification().getMinimumBalance() && !meterAccountDetails.getNotification().isNotified()) {
                 emailSender.send(meterAccountDetails.getNotification().getEmailToSendNotification(),
-                        "Low Meter Balance Alert for Meter No: "+meterAccountDetails.getMeterNumber(),
-                        "Dear Customer, your current balance is "+data.getBalance()+". Kindly recharge your account to avoid service disruptions.");
+                        "Low Meter Balance Alert for Meter No: " + meterAccountDetails.getMeterNumber(),
+                        "Dear Customer, your current balance is " + data.getBalance() + ". Kindly recharge your account to avoid service disruptions.");
                 meterAccountDetails.getNotification().setNotified(true);
                 meterAccountDetailsRepository.save(meterAccountDetails);
             }
         }
     }
+
     @Scheduled(cron = "0 0 0 * * *") // every day at 12am(midnight)
     public void night() throws JsonProcessingException {
         List<MeterAccountDetails> meterAccountDetailsList = meterAccountDetailsRepository.findAllByNotification_Status(false);
-        for (MeterAccountDetails meterAccountDetails:meterAccountDetailsList){
+        for (MeterAccountDetails meterAccountDetails : meterAccountDetailsList) {
             Data data = dataMapper.getDataFromMapper(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber());
-            if(data.getBalance() > meterAccountDetails.getNotification().getMinimumBalance() && meterAccountDetails.getNotification().isNotified()){
+            if (data.getBalance() > meterAccountDetails.getNotification().getMinimumBalance() && meterAccountDetails.getNotification().isNotified()) {
                 meterAccountDetails.getNotification().setNotified(false);
                 meterAccountDetails.setBalance(data.getBalance());
                 meterAccountDetailsRepository.save(meterAccountDetails);

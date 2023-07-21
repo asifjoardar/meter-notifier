@@ -26,7 +26,7 @@ public class CustomerServiceImpl implements CustomerService {
                                ConfirmationTokenRepository confirmationTokenRepository,
                                MeterAccountDetailsRepository meterAccountDetailsRepository,
                                EmailSender emailSender,
-                               NotificationRepository notificationRepository){
+                               NotificationRepository notificationRepository) {
         this.customerRepository = customerRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
         this.meterAccountDetailsRepository = meterAccountDetailsRepository;
@@ -35,8 +35,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void saveCustomer(Customer customer, MeterAccountDetails meterAccountDetails){
-        if(customerRepository.findByEmail(customer.getEmail()) == null){
+    public void saveCustomer(Customer customer, MeterAccountDetails meterAccountDetails) {
+        if (customerRepository.findByEmail(customer.getEmail()) == null) {
             customerRepository.save(customer);
             generateAndSendToken(customer);
         }
@@ -60,11 +60,11 @@ public class CustomerServiceImpl implements CustomerService {
         confirmationTokenRepository.save(confirmationToken);
         // email sender
         emailSender.send(customer.getEmail(), "Validate Your Email Address - Action Required", "To confirm your account, please click here : "
-                +"https://meter-notifier-production.up.railway.app/confirm-account?token="+confirmationToken.getConfirmationToken());
+                + "https://meter-notifier-production.up.railway.app/confirm-account?token=" + confirmationToken.getConfirmationToken());
     }
 
     @Override
-    public void updateCustomer(MeterAccountDetails meterAccountDetails){
+    public void updateCustomer(MeterAccountDetails meterAccountDetails) {
         Customer customer = customerRepository.findByEmail(meterAccountDetails.getCustomer().getEmail());
         Notification notification = meterAccountDetails.getNotification();
         meterAccountDetails = meterAccountDetailsRepository.findByAccountNumber(meterAccountDetails.getAccountNumber());
@@ -76,19 +76,19 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer findCustomerByEmail(String email){
+    public Customer findCustomerByEmail(String email) {
         return customerRepository.findByEmail(email);
     }
 
     @Override
-    public Optional<Customer> findCustomerById(Long id){
+    public Optional<Customer> findCustomerById(Long id) {
         return customerRepository.findById(id);
     }
 
     @Override
     public boolean confirmEmail(String confirmationToken) {
         ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
-        if(token != null) {
+        if (token != null) {
             Customer customer = customerRepository.findByEmail(token.getCustomer().getEmail());
             customer.setEnabled(true);
             customerRepository.save(customer);

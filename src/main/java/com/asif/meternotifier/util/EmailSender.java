@@ -9,11 +9,12 @@ import org.springframework.stereotype.Service;
 public class EmailSender {
     private EmailService emailService;
 
-    public EmailSender(EmailService emailService){
+    public EmailSender(EmailService emailService) {
         this.emailService = emailService;
     }
+
     @Async
-    public void send(String to, String subject, String message){
+    public void send(String to, String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(to);
         mailMessage.setSubject(subject);

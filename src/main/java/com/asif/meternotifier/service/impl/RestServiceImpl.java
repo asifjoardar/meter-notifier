@@ -9,10 +9,11 @@ import org.springframework.web.client.RestTemplate;
 public class RestServiceImpl implements RestService {
     private RestTemplate restTemplate;
 
-    public RestServiceImpl(RestTemplateBuilder restTemplateBuilder){
+    public RestServiceImpl(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
-    public String getPostsPlainJSON(String url){
+
+    public String getPostsPlainJSON(String url) {
         return restTemplate.getForObject(url, String.class);
     }
 }

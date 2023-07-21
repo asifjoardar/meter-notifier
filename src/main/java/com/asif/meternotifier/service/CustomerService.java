@@ -7,8 +7,12 @@ import java.util.Optional;
 
 public interface CustomerService {
     void saveCustomer(Customer customer, MeterAccountDetails meterAccountDetails);
+
     void updateCustomer(MeterAccountDetails meterAccountDetails);
+
     Customer findCustomerByEmail(String email);
+
     Optional<Customer> findCustomerById(Long id);
+
     boolean confirmEmail(String confirmationToken);
 }

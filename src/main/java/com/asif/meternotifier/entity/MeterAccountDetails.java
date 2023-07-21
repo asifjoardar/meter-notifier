@@ -25,7 +25,12 @@ public class MeterAccountDetails {
 
     public MeterAccountDetails() {
     }
-    public MeterAccountDetails(String accountNumber, String meterNumber, Double balance, Notification notification, Customer customer) {
+
+    public MeterAccountDetails(String accountNumber,
+                               String meterNumber,
+                               Double balance,
+                               Notification notification,
+                               Customer customer) {
         this.accountNumber = accountNumber;
         this.meterNumber = meterNumber;
         this.balance = balance;

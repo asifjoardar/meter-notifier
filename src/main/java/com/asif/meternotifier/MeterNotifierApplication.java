@@ -10,8 +10,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAsync
 public class MeterNotifierApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MeterNotifierApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MeterNotifierApplication.class, args);
+    }
 
 }
