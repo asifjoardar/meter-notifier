@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class HomeController {
 
-    private CustomerService customerService;
-    private Validation validation;
-    private DataMapper dataMapper;
+    private final CustomerService customerService;
+    private final Validation validation;
+    private final DataMapper dataMapper;
 
     public HomeController(CustomerService customerService,
                           Validation validation,
@@ -39,10 +39,11 @@ public class HomeController {
             return "signin";
         }
         if (validation.emailExist(customer.getEmail())) {
-            if (validation.emailEnabled(customerService.findCustomerByEmail(customer.getEmail()).getId())) {
-                return "redirect:/customer-account-details/" + customerService.findCustomerByEmail(customer.getEmail()).getId();
+            final Long customerId = customerService.findCustomerByEmail(customer.getEmail()).getId();
+            if (validation.emailEnabled(customerId)) {
+                return "redirect:/customer-account-details/" + customerId;
             } else {
-                return "redirect:/email-verification/" + customerService.findCustomerByEmail(customer.getEmail()).getId();
+                return "redirect:/email-verification/" + customerId;
             }
         } else {
             model.addAttribute("error", "We couldn't find an account with that email address");
@@ -63,13 +64,14 @@ public class HomeController {
         if (result.hasErrors()) {
             return "signup";
         }
-        if (!validation.accountMeterExist(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber())) {
-            Data data = dataMapper.getDataFromMapper(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber());
+        final String acNo = meterAccountDetails.getAccountNumber();
+        final String meterNo = meterAccountDetails.getMeterNumber();
+        if (!validation.accountMeterExist(acNo, meterNo)) {
+            Data data = dataMapper.getDataFromMapper(acNo, meterNo);
             if (data == null) {
                 model.addAttribute("error", "The Account No. does not exist");
                 return "signup";
             } else {
-                System.out.println(data);
                 meterAccountDetails.setBalance(data.getBalance());
                 customerService.saveCustomer(customer, meterAccountDetails);
                 return "redirect:/email-verification/" + customer.getId();

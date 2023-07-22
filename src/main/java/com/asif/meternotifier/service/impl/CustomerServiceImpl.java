@@ -59,8 +59,11 @@ public class CustomerServiceImpl implements CustomerService {
         ConfirmationToken confirmationToken = new ConfirmationToken(customer);
         confirmationTokenRepository.save(confirmationToken);
         // email sender
-        emailSender.send(customer.getEmail(), "Validate Your Email Address - Action Required", "To confirm your account, please click here : "
-                + "https://meter-notifier-production.up.railway.app/confirm-account?token=" + confirmationToken.getConfirmationToken());
+        emailSender.send(customer.getEmail(),
+                "Validate Your Email Address - Action Required",
+                "To confirm your account, please click here : "
+                        + "https://meter-notifier-production.up.railway.app/confirm-account?token="
+                        + confirmationToken.getConfirmationToken());
     }
 
     @Override

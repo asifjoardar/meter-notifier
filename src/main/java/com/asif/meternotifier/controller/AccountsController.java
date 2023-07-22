@@ -63,9 +63,13 @@ public class AccountsController {
     }
 
     @PostMapping("/add-meter/{id}")
-    public String addMeter(@PathVariable("id") Long id, MeterAccountDetails meterAccountDetails, Model model) throws JsonProcessingException {
-        if (!validation.accountMeterExist(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber())) {
-            Data data = dataMapper.getDataFromMapper(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber());
+    public String addMeter(@PathVariable("id") Long id,
+                           MeterAccountDetails meterAccountDetails,
+                           Model model) throws JsonProcessingException {
+        final String acNo = meterAccountDetails.getAccountNumber();
+        final String meterNo = meterAccountDetails.getMeterNumber();
+        if (!validation.accountMeterExist(acNo, meterNo)) {
+            Data data = dataMapper.getDataFromMapper(acNo, meterNo);
             if (data == null) {
                 model.addAttribute("error", "The Account No. does not exist");
                 return "add-meter";
@@ -82,12 +86,12 @@ public class AccountsController {
 
     @GetMapping("edit-meter/{accountNumber}")
     public String showEditMeter(@PathVariable("accountNumber") String accountNumber, Model model) {
-        if (validation.emailEnabled(meterAccountDetailsRepository.findByAccountNumber(accountNumber).getCustomer().getId())) {
-            MeterAccountDetails meterAccountDetails = meterAccountDetailsRepository.findByAccountNumber(accountNumber);
+        MeterAccountDetails meterAccountDetails = meterAccountDetailsRepository.findByAccountNumber(accountNumber);
+        if (validation.emailEnabled(meterAccountDetails.getCustomer().getId())) {
             model.addAttribute("meterAccountDetails", meterAccountDetails);
             return "edit-meter";
         } else {
-            return "redirect:/email-verification/" + meterAccountDetailsRepository.findByAccountNumber(accountNumber).getCustomer().getId();
+            return "redirect:/email-verification/" + meterAccountDetails.getCustomer().getId();
         }
     }
 
@@ -96,17 +100,19 @@ public class AccountsController {
                             MeterAccountDetails meterAccountDetails,
                             Model model) {
         customerService.updateCustomer(meterAccountDetails);
-        return "redirect:/customer-account-details/" + meterAccountDetailsRepository.findByAccountNumber(meterAccountDetails.getAccountNumber()).getCustomer().getId();
+        Customer customer = meterAccountDetailsRepository.findByAccountNumber(meterAccountDetails.getAccountNumber()).getCustomer();
+        return "redirect:/customer-account-details/" + customer.getId();
     }
 
     @GetMapping("delete-confirmation/{accountNumber}")
     public String deleteMeterConf(@PathVariable("accountNumber") String accountNumber, Model model) {
-        if (validation.emailEnabled(meterAccountDetailsRepository.findByAccountNumber(accountNumber).getCustomer().getId())) {
+        Customer customer = meterAccountDetailsRepository.findByAccountNumber(accountNumber).getCustomer();
+        if (validation.emailEnabled(customer.getId())) {
             model.addAttribute("accountNumber", accountNumber);
-            model.addAttribute("id", meterAccountDetailsRepository.findByAccountNumber(accountNumber).getCustomer().getId());
+            model.addAttribute("id", customer.getId());
             return "delete-meter-confirmation";
         } else {
-            return "redirect:/email-verification/" + meterAccountDetailsRepository.findByAccountNumber(accountNumber).getCustomer().getId();
+            return "redirect:/email-verification/" + customer.getId();
         }
     }
 

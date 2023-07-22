@@ -2,6 +2,7 @@ package com.asif.meternotifier.service;
 
 import com.asif.meternotifier.dto.Data;
 import com.asif.meternotifier.entity.MeterAccountDetails;
+import com.asif.meternotifier.entity.Notification;
 import com.asif.meternotifier.repository.MeterAccountDetailsRepository;
 import com.asif.meternotifier.util.DataMapper;
 import com.asif.meternotifier.util.EmailSender;
@@ -34,12 +35,17 @@ public class NotificationSchedulerService {
     public void day() throws JsonProcessingException {
         List<MeterAccountDetails> meterAccountDetailsList = meterAccountDetailsRepository.findAllByNotification_Status(true);
         for (MeterAccountDetails meterAccountDetails : meterAccountDetailsList) {
-            Data data = dataMapper.getDataFromMapper(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber());
-            if (data.getBalance() <= meterAccountDetails.getNotification().getMinimumBalance() && !meterAccountDetails.getNotification().isNotified()) {
-                emailSender.send(meterAccountDetails.getNotification().getEmailToSendNotification(),
-                        "Low Meter Balance Alert for Meter No: " + meterAccountDetails.getMeterNumber(),
-                        "Dear Customer, your current balance is " + data.getBalance() + ". Kindly recharge your account to avoid service disruptions.");
-                meterAccountDetails.getNotification().setNotified(true);
+            final String acNo = meterAccountDetails.getAccountNumber();
+            final String meterNo = meterAccountDetails.getMeterNumber();
+            Notification notification = meterAccountDetails.getNotification();
+            Data data = dataMapper.getDataFromMapper(acNo, meterNo);
+            if (data.getBalance() <= notification.getMinimumBalance() && !notification.isNotified()) {
+                emailSender.send(notification.getEmailToSendNotification(),
+                        "Low Meter Balance Alert for Meter No: " + meterNo,
+                        "Dear Customer, your current balance is "
+                                + data.getBalance()
+                                + ". Kindly recharge your account to avoid service disruptions.");
+                notification.setNotified(true);
                 meterAccountDetailsRepository.save(meterAccountDetails);
             }
         }
@@ -49,9 +55,12 @@ public class NotificationSchedulerService {
     public void night() throws JsonProcessingException {
         List<MeterAccountDetails> meterAccountDetailsList = meterAccountDetailsRepository.findAllByNotification_Status(false);
         for (MeterAccountDetails meterAccountDetails : meterAccountDetailsList) {
-            Data data = dataMapper.getDataFromMapper(meterAccountDetails.getAccountNumber(), meterAccountDetails.getMeterNumber());
-            if (data.getBalance() > meterAccountDetails.getNotification().getMinimumBalance() && meterAccountDetails.getNotification().isNotified()) {
-                meterAccountDetails.getNotification().setNotified(false);
+            final String acNo = meterAccountDetails.getAccountNumber();
+            final String meterNo = meterAccountDetails.getMeterNumber();
+            Notification notification = meterAccountDetails.getNotification();
+            Data data = dataMapper.getDataFromMapper(acNo, meterNo);
+            if (data.getBalance() > notification.getMinimumBalance() && notification.isNotified()) {
+                notification.setNotified(false);
                 meterAccountDetails.setBalance(data.getBalance());
                 meterAccountDetailsRepository.save(meterAccountDetails);
             }
