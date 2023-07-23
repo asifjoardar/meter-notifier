@@ -1,15 +1,18 @@
 package com.asif.meternotifier.util;
 
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class UrlMaker {
+    @Value("${data_host}")
+    private String dataHost;
+
     public String getUrl(String acNo, String meterNo) {
-        return "https://rightful-yarn-production.up.railway.app/api/tkdes/customer/getBalance?accountNo="
+        return dataHost
+                + "/api/tkdes/customer/getBalance?accountNo="
                 + acNo
                 + "&meterNo="
                 + meterNo;
-        /*return "http://localhost:3000/api/tkdes/customer/getBalance?accountNo="+acNo+"&meterNo="+meterNo;*/
-        /*return "http://prepaid.desco.org.bd/api/tkdes/customer/getBalance?accountNo="+ acNo + "&meterNo="+ meterNo;*/
     }
 }

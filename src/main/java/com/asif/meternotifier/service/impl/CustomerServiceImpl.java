@@ -10,6 +10,7 @@ import com.asif.meternotifier.repository.MeterAccountDetailsRepository;
 import com.asif.meternotifier.repository.NotificationRepository;
 import com.asif.meternotifier.service.CustomerService;
 import com.asif.meternotifier.util.EmailSender;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,6 +22,9 @@ public class CustomerServiceImpl implements CustomerService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final EmailSender emailSender;
     private final NotificationRepository notificationRepository;
+
+    @Value("${host}")
+    private String host;
 
     public CustomerServiceImpl(CustomerRepository customerRepository,
                                ConfirmationTokenRepository confirmationTokenRepository,
@@ -62,7 +66,8 @@ public class CustomerServiceImpl implements CustomerService {
         emailSender.send(customer.getEmail(),
                 "Validate Your Email Address - Action Required",
                 "To confirm your account, please click here : "
-                        + "https://meter-notifier-production.up.railway.app/confirm-account?token="
+                        + host
+                        + "/confirm-account?token="
                         + confirmationToken.getConfirmationToken());
     }
 
