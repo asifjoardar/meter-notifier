@@ -4,16 +4,13 @@ import com.asif.meternotifier.service.RestService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-
-import java.util.Map;
-
-@Service
-public class RequestSender {
+@Component
+public class RequestSenderUtil {
     private RestService restService;
 
-    public RequestSender(RestService restService) {
+    public RequestSenderUtil(RestService restService) {
         this.restService = restService;
     }
 

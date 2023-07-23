@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UrlMaker {
+public class UrlMakerUtil {
     @Value("${data_host}")
     private String dataHost;
 

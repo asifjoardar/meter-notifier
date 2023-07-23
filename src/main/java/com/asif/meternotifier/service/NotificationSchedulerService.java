@@ -4,8 +4,8 @@ import com.asif.meternotifier.dto.Data;
 import com.asif.meternotifier.entity.MeterAccountDetails;
 import com.asif.meternotifier.entity.Notification;
 import com.asif.meternotifier.repository.MeterAccountDetailsRepository;
-import com.asif.meternotifier.util.DataMapper;
-import com.asif.meternotifier.util.EmailSender;
+import com.asif.meternotifier.util.DataMapperUtil;
+import com.asif.meternotifier.util.EmailSenderUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,15 +17,15 @@ import java.util.List;
 @Service
 public class NotificationSchedulerService {
     private final MeterAccountDetailsRepository meterAccountDetailsRepository;
-    private final EmailSender emailSender;
-    private final DataMapper dataMapper;
+    private final EmailSenderUtil emailSenderUtil;
+    private final DataMapperUtil dataMapperUtil;
 
     public NotificationSchedulerService(MeterAccountDetailsRepository meterAccountDetailsRepository,
-                                        EmailSender emailSender,
-                                        DataMapper dataMapper) {
+                                        EmailSenderUtil emailSenderUtil,
+                                        DataMapperUtil dataMapperUtil) {
         this.meterAccountDetailsRepository = meterAccountDetailsRepository;
-        this.emailSender = emailSender;
-        this.dataMapper = dataMapper;
+        this.emailSenderUtil = emailSenderUtil;
+        this.dataMapperUtil = dataMapperUtil;
     }
 
     Logger logger = LoggerFactory.getLogger(MeterAccountDetails.class);
@@ -38,9 +38,9 @@ public class NotificationSchedulerService {
             final String acNo = meterAccountDetails.getAccountNumber();
             final String meterNo = meterAccountDetails.getMeterNumber();
             Notification notification = meterAccountDetails.getNotification();
-            Data data = dataMapper.getDataFromMapper(acNo, meterNo);
+            Data data = dataMapperUtil.getDataFromMapper(acNo, meterNo);
             if (data.getBalance() <= notification.getMinimumBalance() && !notification.isNotified()) {
-                emailSender.send(notification.getEmailToSendNotification(),
+                emailSenderUtil.send(notification.getEmailToSendNotification(),
                         "Low Meter Balance Alert for Meter No: " + meterNo,
                         "Dear Customer, your current balance is "
                                 + data.getBalance()
@@ -58,7 +58,7 @@ public class NotificationSchedulerService {
             final String acNo = meterAccountDetails.getAccountNumber();
             final String meterNo = meterAccountDetails.getMeterNumber();
             Notification notification = meterAccountDetails.getNotification();
-            Data data = dataMapper.getDataFromMapper(acNo, meterNo);
+            Data data = dataMapperUtil.getDataFromMapper(acNo, meterNo);
             if (data.getBalance() > notification.getMinimumBalance() && notification.isNotified()) {
                 notification.setNotified(false);
                 meterAccountDetails.setBalance(data.getBalance());

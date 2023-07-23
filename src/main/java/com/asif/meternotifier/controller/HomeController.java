@@ -4,7 +4,7 @@ import com.asif.meternotifier.dto.Data;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
 import com.asif.meternotifier.service.CustomerService;
-import com.asif.meternotifier.util.DataMapper;
+import com.asif.meternotifier.util.DataMapperUtil;
 import com.asif.meternotifier.validation.Validation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
@@ -18,14 +18,14 @@ public class HomeController {
 
     private final CustomerService customerService;
     private final Validation validation;
-    private final DataMapper dataMapper;
+    private final DataMapperUtil dataMapperUtil;
 
     public HomeController(CustomerService customerService,
                           Validation validation,
-                          DataMapper dataMapper) {
+                          DataMapperUtil dataMapperUtil) {
         this.customerService = customerService;
         this.validation = validation;
-        this.dataMapper = dataMapper;
+        this.dataMapperUtil = dataMapperUtil;
     }
 
     @GetMapping("/")
@@ -67,7 +67,7 @@ public class HomeController {
         final String acNo = meterAccountDetails.getAccountNumber();
         final String meterNo = meterAccountDetails.getMeterNumber();
         if (!validation.accountMeterExist(acNo, meterNo)) {
-            Data data = dataMapper.getDataFromMapper(acNo, meterNo);
+            Data data = dataMapperUtil.getDataFromMapper(acNo, meterNo);
             if (data == null) {
                 model.addAttribute("error", "The Account No. does not exist");
                 return "signup";

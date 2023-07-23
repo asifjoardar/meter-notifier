@@ -9,7 +9,7 @@ import com.asif.meternotifier.repository.CustomerRepository;
 import com.asif.meternotifier.repository.MeterAccountDetailsRepository;
 import com.asif.meternotifier.repository.NotificationRepository;
 import com.asif.meternotifier.service.CustomerService;
-import com.asif.meternotifier.util.EmailSender;
+import com.asif.meternotifier.util.EmailSenderUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final MeterAccountDetailsRepository meterAccountDetailsRepository;
     private final ConfirmationTokenRepository confirmationTokenRepository;
-    private final EmailSender emailSender;
+    private final EmailSenderUtil emailSenderUtil;
     private final NotificationRepository notificationRepository;
 
     @Value("${host}")
@@ -29,12 +29,12 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerServiceImpl(CustomerRepository customerRepository,
                                ConfirmationTokenRepository confirmationTokenRepository,
                                MeterAccountDetailsRepository meterAccountDetailsRepository,
-                               EmailSender emailSender,
+                               EmailSenderUtil emailSenderUtil,
                                NotificationRepository notificationRepository) {
         this.customerRepository = customerRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
         this.meterAccountDetailsRepository = meterAccountDetailsRepository;
-        this.emailSender = emailSender;
+        this.emailSenderUtil = emailSenderUtil;
         this.notificationRepository = notificationRepository;
     }
 
@@ -63,7 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
         ConfirmationToken confirmationToken = new ConfirmationToken(customer);
         confirmationTokenRepository.save(confirmationToken);
         // email sender
-        emailSender.send(customer.getEmail(),
+        emailSenderUtil.send(customer.getEmail(),
                 "Validate Your Email Address - Action Required",
                 "To confirm your account, please click here : "
                         + host

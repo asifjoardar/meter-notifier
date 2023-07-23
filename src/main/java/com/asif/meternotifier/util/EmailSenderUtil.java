@@ -3,13 +3,13 @@ package com.asif.meternotifier.util;
 import com.asif.meternotifier.service.EmailService;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class EmailSender {
+@Component
+public class EmailSenderUtil {
     private EmailService emailService;
 
-    public EmailSender(EmailService emailService) {
+    public EmailSenderUtil(EmailService emailService) {
         this.emailService = emailService;
     }
 
