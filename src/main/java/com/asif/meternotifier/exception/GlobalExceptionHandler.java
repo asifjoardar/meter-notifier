@@ -14,4 +14,11 @@ public class GlobalExceptionHandler {
         model.addAttribute("message", meterNotFoundException.getMessage());
         return "404";
     }
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public String handleCustomerNotFoundException(HttpServletRequest request,
+                                               CustomerNotFoundException customerNotFoundException,
+                                               Model model) {
+        model.addAttribute("message", customerNotFoundException.getMessage());
+        return "404";
+    }
 }

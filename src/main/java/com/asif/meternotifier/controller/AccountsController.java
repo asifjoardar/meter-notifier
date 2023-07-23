@@ -43,7 +43,7 @@ public class AccountsController {
     @GetMapping("/customer-account-details/{id}")
     public String customerInfoDetails(@PathVariable("id") Long id, Model model) {
         if (validation.emailEnabled(id)) {
-            Customer customer = customerService.findCustomerById(id).get();
+            Customer customer = customerService.findCustomerById(id);
             model.addAttribute("customer", customer);
             return "customer-account-details";
         } else {
@@ -75,7 +75,7 @@ public class AccountsController {
                 return "add-meter";
             } else {
                 meterAccountDetails.setBalance(data.getBalance());
-                customerService.saveCustomer(customerService.findCustomerById(id).get(), meterAccountDetails);
+                customerService.saveCustomer(customerService.findCustomerById(id), meterAccountDetails);
                 return "redirect:/customer-account-details/{id}";
             }
         } else {

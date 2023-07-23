@@ -84,7 +84,7 @@ public class HomeController {
 
     @GetMapping("/email-verification/{id}")
     public String emailVerification(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("email", customerService.findCustomerById(id).get().getEmail());
+        model.addAttribute("email", customerService.findCustomerById(id).getEmail());
         return "email-verification-message";
     }
 }
