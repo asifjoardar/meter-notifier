@@ -66,7 +66,7 @@ public class HomeController {
         }
         final String acNo = meterAccountDetails.getAccountNumber();
         final String meterNo = meterAccountDetails.getMeterNumber();
-        if (!validation.accountMeterExist(acNo, meterNo)) {
+        if (validation.accountMeterExist(acNo, meterNo)) {
             Data data = dataMapperUtil.getDataFromMapper(acNo, meterNo);
             if (data == null) {
                 model.addAttribute("error", "The Account No. does not exist");

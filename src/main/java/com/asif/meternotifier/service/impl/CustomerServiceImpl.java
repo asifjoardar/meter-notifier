@@ -6,9 +6,9 @@ import com.asif.meternotifier.entity.MeterAccountDetails;
 import com.asif.meternotifier.entity.Notification;
 import com.asif.meternotifier.repository.ConfirmationTokenRepository;
 import com.asif.meternotifier.repository.CustomerRepository;
-import com.asif.meternotifier.repository.MeterAccountDetailsRepository;
 import com.asif.meternotifier.repository.NotificationRepository;
 import com.asif.meternotifier.service.CustomerService;
+import com.asif.meternotifier.service.MeterAccountDetailsService;
 import com.asif.meternotifier.util.EmailSenderUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,24 +18,24 @@ import java.util.Optional;
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
-    private final MeterAccountDetailsRepository meterAccountDetailsRepository;
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final EmailSenderUtil emailSenderUtil;
     private final NotificationRepository notificationRepository;
+    private final MeterAccountDetailsService meterAccountDetailsService;
 
     @Value("${host}")
     private String host;
 
     public CustomerServiceImpl(CustomerRepository customerRepository,
                                ConfirmationTokenRepository confirmationTokenRepository,
-                               MeterAccountDetailsRepository meterAccountDetailsRepository,
                                EmailSenderUtil emailSenderUtil,
-                               NotificationRepository notificationRepository) {
+                               NotificationRepository notificationRepository,
+                               MeterAccountDetailsService meterAccountDetailsService) {
         this.customerRepository = customerRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
-        this.meterAccountDetailsRepository = meterAccountDetailsRepository;
         this.emailSenderUtil = emailSenderUtil;
         this.notificationRepository = notificationRepository;
+        this.meterAccountDetailsService = meterAccountDetailsService;
     }
 
     @Override
@@ -49,13 +49,13 @@ public class CustomerServiceImpl implements CustomerService {
         notification.setEmailToSendNotification(customer.getEmail());
         notificationRepository.save(notification);
 
-        meterAccountDetailsRepository.save(meterAccountDetails);
+        meterAccountDetailsService.saveMeterAccountDetails(meterAccountDetails);
         customer.getMeterAccountDetailsList().add(meterAccountDetails);
         customerRepository.save(customer);
 
         meterAccountDetails.setCustomer(customer);
         meterAccountDetails.setNotification(notification);
-        meterAccountDetailsRepository.save(meterAccountDetails);
+        meterAccountDetailsService.saveMeterAccountDetails(meterAccountDetails);
     }
 
     private void generateAndSendToken(Customer customer) {
@@ -75,12 +75,12 @@ public class CustomerServiceImpl implements CustomerService {
     public void updateCustomer(MeterAccountDetails meterAccountDetails) {
         Customer customer = customerRepository.findByEmail(meterAccountDetails.getCustomer().getEmail());
         Notification notification = meterAccountDetails.getNotification();
-        meterAccountDetails = meterAccountDetailsRepository.findByAccountNumber(meterAccountDetails.getAccountNumber());
+        meterAccountDetails = meterAccountDetailsService.findByAccountNumber(meterAccountDetails.getAccountNumber());
         notification.setId(meterAccountDetails.getNotification().getId());
         notificationRepository.save(notification);
         meterAccountDetails.setNotification(notification);
         meterAccountDetails.setCustomer(customer);
-        meterAccountDetailsRepository.save(meterAccountDetails);
+        meterAccountDetailsService.saveMeterAccountDetails(meterAccountDetails);
     }
 
     @Override

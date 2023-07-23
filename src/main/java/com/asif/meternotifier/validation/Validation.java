@@ -16,8 +16,8 @@ public class Validation {
     }
 
     public boolean accountMeterExist(String accountNo, String meterNo) {
-        return meterAccountDetailsRepository.findByAccountNumber(accountNo) != null ||
-                meterAccountDetailsRepository.findByAccountNumber(meterNo) != null;
+        return meterAccountDetailsRepository.findByAccountNumber(accountNo).isEmpty() &&
+                meterAccountDetailsRepository.findByAccountNumber(meterNo).isEmpty();
     }
 
     public boolean emailExist(String email) {
