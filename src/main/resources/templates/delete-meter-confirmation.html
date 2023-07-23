@@ -16,8 +16,12 @@
         <div class="r-2"><p>Do you really want to delete these records? This process cannot be undone.</p></div>
         <hr>
         <div class="r-3">
-            <a th:href="@{/customer-account-details/{id}(id=${id})}" class="btn-1 cancel">Cancel</a>
-            <a th:href="@{/delete-meter/{accountNumber}(accountNumber=${accountNumber})}" class="btn-1 delete">Delete</a>
+            <form method="GET" th:action="@{/customer-account-details/{id}(id=${id})}">
+                <button type="submit" class="btn-1 cancel">Cancel</button>
+            </form>
+            <form method="POST" th:action="@{/delete-meter/{accountNumber}(accountNumber=${accountNumber})}">
+                <button type="submit" class="btn-1 delete">Delete</button>
+            </form>
         </div>
     </div>
 </div>

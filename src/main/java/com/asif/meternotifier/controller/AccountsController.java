@@ -116,7 +116,7 @@ public class AccountsController {
         }
     }
 
-    @GetMapping("delete-meter/{accountNumber}")
+    @PostMapping("delete-meter/{accountNumber}")
     public String deleteMeter(@PathVariable("accountNumber") String accountNumber) {
         Customer customer = meterAccountDetailsRepository.findByAccountNumber(accountNumber).getCustomer();
         meterAccountDetailsRepository.deleteByAccountNumber(accountNumber);
