@@ -14,7 +14,7 @@ public class MeterAccountDetails {
     @NotEmpty
     private String meterNumber;
     private Double balance;
-    @OneToOne(targetEntity = Notification.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = Notification.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(nullable = true, name = "notification_id")
     private Notification notification;
 
