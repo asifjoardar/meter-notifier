@@ -3,8 +3,8 @@ package com.asif.meternotifier.controller;
 import com.asif.meternotifier.dto.Data;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
-import com.asif.meternotifier.repository.MeterAccountDetailsRepository;
 import com.asif.meternotifier.service.CustomerService;
+import com.asif.meternotifier.service.MeterAccountDetailsService;
 import com.asif.meternotifier.util.DataMapper;
 import com.asif.meternotifier.validation.Validation;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @Transactional
 public class AccountsController {
-    private CustomerService customerService;
-    private MeterAccountDetailsRepository meterAccountDetailsRepository;
-    private Validation validation;
-    private DataMapper dataMapper;
+    private final CustomerService customerService;
+    private final MeterAccountDetailsService meterAccountDetailsService;
+    private final Validation validation;
+    private final DataMapper dataMapper;
 
     public AccountsController(CustomerService customerService,
-                              MeterAccountDetailsRepository meterAccountDetailsRepository,
+                              MeterAccountDetailsService meterAccountDetailsService,
                               Validation validation,
                               DataMapper dataMapper) {
         this.customerService = customerService;
-        this.meterAccountDetailsRepository = meterAccountDetailsRepository;
+        this.meterAccountDetailsService = meterAccountDetailsService;
         this.validation = validation;
         this.dataMapper = dataMapper;
     }
@@ -86,7 +86,7 @@ public class AccountsController {
 
     @GetMapping("edit-meter/{accountNumber}")
     public String showEditMeter(@PathVariable("accountNumber") String accountNumber, Model model) {
-        MeterAccountDetails meterAccountDetails = meterAccountDetailsRepository.findByAccountNumber(accountNumber);
+        MeterAccountDetails meterAccountDetails = meterAccountDetailsService.findByAccountNumber(accountNumber);
         if (validation.emailEnabled(meterAccountDetails.getCustomer().getId())) {
             model.addAttribute("meterAccountDetails", meterAccountDetails);
             return "edit-meter";
@@ -100,13 +100,13 @@ public class AccountsController {
                             MeterAccountDetails meterAccountDetails,
                             Model model) {
         customerService.updateCustomer(meterAccountDetails);
-        Customer customer = meterAccountDetailsRepository.findByAccountNumber(meterAccountDetails.getAccountNumber()).getCustomer();
+        Customer customer = meterAccountDetailsService.findByAccountNumber(meterAccountDetails.getAccountNumber()).getCustomer();
         return "redirect:/customer-account-details/" + customer.getId();
     }
 
     @GetMapping("delete-confirmation/{accountNumber}")
     public String deleteMeterConf(@PathVariable("accountNumber") String accountNumber, Model model) {
-        Customer customer = meterAccountDetailsRepository.findByAccountNumber(accountNumber).getCustomer();
+        Customer customer = meterAccountDetailsService.findByAccountNumber(accountNumber).getCustomer();
         if (validation.emailEnabled(customer.getId())) {
             model.addAttribute("accountNumber", accountNumber);
             model.addAttribute("id", customer.getId());
@@ -118,8 +118,8 @@ public class AccountsController {
 
     @PostMapping("delete-meter/{accountNumber}")
     public String deleteMeter(@PathVariable("accountNumber") String accountNumber) {
-        Customer customer = meterAccountDetailsRepository.findByAccountNumber(accountNumber).getCustomer();
-        meterAccountDetailsRepository.deleteByAccountNumber(accountNumber);
+        Customer customer = meterAccountDetailsService.findByAccountNumber(accountNumber).getCustomer();
+        meterAccountDetailsService.deleteByAccountNumber(accountNumber);
         return "redirect:/customer-account-details/" + customer.getId();
     }
 }
