@@ -4,11 +4,13 @@ import com.asif.meternotifier.entity.MeterAccountDetails;
 import com.asif.meternotifier.exception.MeterNotFoundException;
 import com.asif.meternotifier.repository.MeterAccountDetailsRepository;
 import com.asif.meternotifier.service.MeterAccountDetailsService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class MeterAccountDetailsServiceImpl implements MeterAccountDetailsService {
     private final MeterAccountDetailsRepository meterAccountDetailsRepository;
 

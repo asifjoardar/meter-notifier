@@ -14,7 +14,9 @@ import com.asif.meternotifier.util.EmailSenderUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -61,7 +63,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     private void generateAndSendToken(Customer customer) {
         // token generate
-        ConfirmationToken confirmationToken = new ConfirmationToken(customer);
+        ConfirmationToken confirmationToken = new ConfirmationToken();
+        confirmationToken.setCustomer(customer);
+        confirmationToken.setConfirmationToken(UUID.randomUUID().toString());
+        confirmationToken.setCreatedDate(new Date());
         confirmationTokenRepository.save(confirmationToken);
         // email sender
         emailSenderUtil.send(customer.getEmail(),

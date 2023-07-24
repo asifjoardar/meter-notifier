@@ -8,13 +8,11 @@ import com.asif.meternotifier.service.MeterAccountDetailsService;
 import com.asif.meternotifier.util.DataMapperUtil;
 import com.asif.meternotifier.validation.Validation;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@Transactional
 public class AccountsController {
     private final CustomerService customerService;
     private final MeterAccountDetailsService meterAccountDetailsService;
@@ -68,7 +66,7 @@ public class AccountsController {
                            Model model) throws JsonProcessingException {
         final String acNo = meterAccountDetails.getAccountNumber();
         final String meterNo = meterAccountDetails.getMeterNumber();
-        if (validation.accountMeterExist(acNo, meterNo)) {
+        if (!validation.accountMeterExist(acNo, meterNo)) {
             Data data = dataMapperUtil.getDataFromMapper(acNo, meterNo);
             if (data == null) {
                 model.addAttribute("error", "The Account No. does not exist");
