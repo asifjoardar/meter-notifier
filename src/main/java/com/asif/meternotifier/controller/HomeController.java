@@ -28,6 +28,11 @@ public class HomeController {
         this.dataMapperUtil = dataMapperUtil;
     }
 
+    @GetMapping("/about")
+    public String showAboutPage() {
+        return "about";
+    }
+
     @GetMapping("/")
     public String showSigninForm(Customer customer) {
         return "signin";
