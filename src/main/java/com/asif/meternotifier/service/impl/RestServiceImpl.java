@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class RestServiceImpl implements RestService {
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     public RestServiceImpl(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();

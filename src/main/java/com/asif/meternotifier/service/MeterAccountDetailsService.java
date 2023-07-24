@@ -3,9 +3,9 @@ package com.asif.meternotifier.service;
 import com.asif.meternotifier.entity.MeterAccountDetails;
 
 public interface MeterAccountDetailsService {
-    public void saveMeterAccountDetails(MeterAccountDetails meterAccountDetails);
+    void saveMeterAccountDetails(MeterAccountDetails meterAccountDetails);
 
-    public MeterAccountDetails findByAccountNumber(String accountNumber);
+    MeterAccountDetails findByAccountNumber(String accountNumber);
 
-    public void deleteByAccountNumber(String accountNumber);
+    void deleteByAccountNumber(String accountNumber);
 }

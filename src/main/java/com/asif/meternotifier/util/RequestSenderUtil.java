@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RequestSenderUtil {
-    private RestService restService;
+    private final RestService restService;
 
     public RequestSenderUtil(RestService restService) {
         this.restService = restService;

@@ -18,6 +18,5 @@ public class DataMapperUtil {
     public Data getDataFromMapper(String acNo, String meterNo) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.treeToValue(requestSenderUtil.request(urlMakerUtil.getUrl(acNo, meterNo)), Data.class);
-        /*return new Data(acNo, meterNo, 123, "123", "00:00:00");*/
     }
 }
