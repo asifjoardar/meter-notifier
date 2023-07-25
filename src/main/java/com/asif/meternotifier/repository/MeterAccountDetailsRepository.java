@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface MeterAccountDetailsRepository extends JpaRepository<MeterAccountDetails, String> {
     Optional<MeterAccountDetails> findByAccountNumber(String accountNumber);
-    List<MeterAccountDetails> findAllByNotification_Status(boolean status);
+    List<MeterAccountDetails> findAllByNotificationStatus(boolean status);
     void deleteByAccountNumber(String accountNumber);
 }

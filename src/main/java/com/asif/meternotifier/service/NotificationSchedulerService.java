@@ -33,7 +33,7 @@ public class NotificationSchedulerService {
     //@Scheduled(fixedRate = 10000)
     @Scheduled(cron = "0 0 12 * * ?") // every day at 12pm(noon)
     public void day() throws JsonProcessingException {
-        List<MeterAccountDetails> meterAccountDetailsList = meterAccountDetailsRepository.findAllByNotification_Status(true);
+        List<MeterAccountDetails> meterAccountDetailsList = meterAccountDetailsRepository.findAllByNotificationStatus(true);
         for (MeterAccountDetails meterAccountDetails : meterAccountDetailsList) {
             final String acNo = meterAccountDetails.getAccountNumber();
             final String meterNo = meterAccountDetails.getMeterNumber();
@@ -53,7 +53,7 @@ public class NotificationSchedulerService {
 
     @Scheduled(cron = "0 0 0 * * *") // every day at 12am(midnight)
     public void night() throws JsonProcessingException {
-        List<MeterAccountDetails> meterAccountDetailsList = meterAccountDetailsRepository.findAllByNotification_Status(false);
+        List<MeterAccountDetails> meterAccountDetailsList = meterAccountDetailsRepository.findAllByNotificationStatus(false);
         for (MeterAccountDetails meterAccountDetails : meterAccountDetailsList) {
             final String acNo = meterAccountDetails.getAccountNumber();
             final String meterNo = meterAccountDetails.getMeterNumber();
