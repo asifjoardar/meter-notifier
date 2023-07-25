@@ -99,7 +99,7 @@ Contributions to the Meter Notifier project are welcome! If you find any bugs or
 
 ## License
 
-The Meter Notifier project is licensed under the [MIT License](LICENSE).
+The Meter Notifier project is licensed under the [Apache License](LICENSE).
 
 ## Contact
 
