@@ -43,12 +43,15 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void saveCustomer(Customer customer, MeterAccountDetails meterAccountDetails) {
+        Notification notification = new Notification();
+
         if (customerRepository.findByEmail(customer.getEmail()).isEmpty()) {
             customerRepository.save(customer);
             generateAndSendToken(customer);
+        } else {
+            notification.setId(meterAccountDetails.getNotification().getId());
         }
 
-        Notification notification = new Notification();
         notification.setEmailToSendNotification(customer.getEmail());
         notificationRepository.save(notification);
 
@@ -75,22 +78,6 @@ public class CustomerServiceImpl implements CustomerService {
                         + host
                         + "/confirm-account?token="
                         + confirmationToken.getConfirmationToken());
-    }
-
-    @Override
-    public void updateCustomer(MeterAccountDetails meterAccountDetails) {
-        final String email = meterAccountDetails.getCustomer().getEmail();
-
-        Optional<Customer> customer = customerRepository.findByEmail(email);
-        customer.orElseThrow(() -> new CustomerNotFoundException("Customer with email " + email + " not found"));
-
-        Notification notification = meterAccountDetails.getNotification();
-        meterAccountDetails = meterAccountDetailsService.findByAccountNumber(meterAccountDetails.getAccountNumber());
-        notification.setId(meterAccountDetails.getNotification().getId());
-        notificationRepository.save(notification);
-        meterAccountDetails.setNotification(notification);
-        meterAccountDetails.setCustomer(customer.get());
-        meterAccountDetailsService.saveMeterAccountDetails(meterAccountDetails);
     }
 
     @Override

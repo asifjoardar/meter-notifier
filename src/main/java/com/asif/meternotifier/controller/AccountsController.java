@@ -97,8 +97,8 @@ public class AccountsController {
     public String editMeter(@PathVariable("accountNumber") String accountNumber,
                             MeterAccountDetails meterAccountDetails,
                             Model model) {
-        customerService.updateCustomer(meterAccountDetails);
         Customer customer = meterAccountDetailsService.findByAccountNumber(meterAccountDetails.getAccountNumber()).getCustomer();
+        customerService.saveCustomer(customer, meterAccountDetails);
         return "redirect:/customer-account-details/" + customer.getId();
     }
 
