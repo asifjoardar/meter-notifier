@@ -5,7 +5,6 @@ import com.asif.meternotifier.entity.MeterAccountDetails;
 import com.asif.meternotifier.entity.Notification;
 import com.asif.meternotifier.repository.MeterAccountDetailsRepository;
 import com.asif.meternotifier.util.DataMapperUtil;
-import com.asif.meternotifier.util.EmailSenderUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,14 +16,14 @@ import java.util.List;
 @Service
 public class NotificationSchedulerService {
     private final MeterAccountDetailsRepository meterAccountDetailsRepository;
-    private final EmailSenderUtil emailSenderUtil;
+    private final EmailService emailService;
     private final DataMapperUtil dataMapperUtil;
 
     public NotificationSchedulerService(MeterAccountDetailsRepository meterAccountDetailsRepository,
-                                        EmailSenderUtil emailSenderUtil,
+                                        EmailService emailService,
                                         DataMapperUtil dataMapperUtil) {
         this.meterAccountDetailsRepository = meterAccountDetailsRepository;
-        this.emailSenderUtil = emailSenderUtil;
+        this.emailService = emailService;
         this.dataMapperUtil = dataMapperUtil;
     }
 
@@ -40,7 +39,7 @@ public class NotificationSchedulerService {
             Notification notification = meterAccountDetails.getNotification();
             Data data = dataMapperUtil.getDataFromMapper(acNo, meterNo);
             if (data.getBalance() <= notification.getMinimumBalance() && !notification.isNotified()) {
-                emailSenderUtil.send(notification.getEmailToSendNotification(),
+                emailService.sendEmail(notification.getEmailToSendNotification(),
                         "Low Meter Balance Alert for Meter No: " + meterNo,
                         "Dear Customer, your current balance is "
                                 + data.getBalance()

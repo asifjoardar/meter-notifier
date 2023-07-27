@@ -4,7 +4,7 @@ import com.asif.meternotifier.entity.ConfirmationToken;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.repository.ConfirmationTokenRepository;
 import com.asif.meternotifier.service.ConfirmationTokenService;
-import com.asif.meternotifier.util.EmailSenderUtil;
+import com.asif.meternotifier.service.EmailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +14,15 @@ import java.util.UUID;
 @Service
 public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
-    private final EmailSenderUtil emailSenderUtil;
+    private final EmailService emailService;
 
     @Value("${host}")
     private String host;
 
     public ConfirmationTokenServiceImpl(ConfirmationTokenRepository confirmationTokenRepository,
-                                        EmailSenderUtil emailSenderUtil) {
+                                        EmailService emailService) {
         this.confirmationTokenRepository = confirmationTokenRepository;
-        this.emailSenderUtil = emailSenderUtil;
+        this.emailService = emailService;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
         confirmationToken.setCreatedDate(new Date());
         confirmationTokenRepository.save(confirmationToken);
         // email sender
-        emailSenderUtil.send(customer.getEmail(),
+        emailService.sendEmail(customer.getEmail(),
                 "Validate Your Email Address - Action Required",
                 "To confirm your account, please click here : "
                         + host
