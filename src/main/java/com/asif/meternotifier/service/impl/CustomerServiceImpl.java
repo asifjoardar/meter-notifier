@@ -5,40 +5,34 @@ import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
 import com.asif.meternotifier.entity.Notification;
 import com.asif.meternotifier.exception.CustomerNotFoundException;
-import com.asif.meternotifier.repository.ConfirmationTokenRepository;
 import com.asif.meternotifier.repository.CustomerRepository;
 import com.asif.meternotifier.repository.NotificationRepository;
+import com.asif.meternotifier.service.ConfirmationTokenService;
 import com.asif.meternotifier.service.CustomerService;
 import com.asif.meternotifier.service.MeterAccountDetailsService;
-import com.asif.meternotifier.util.EmailSenderUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
-    private final ConfirmationTokenRepository confirmationTokenRepository;
-    private final EmailSenderUtil emailSenderUtil;
     private final NotificationRepository notificationRepository;
     private final MeterAccountDetailsService meterAccountDetailsService;
+    private final ConfirmationTokenService confirmationTokenService;
 
     @Value("${host}")
     private String host;
 
     public CustomerServiceImpl(CustomerRepository customerRepository,
-                               ConfirmationTokenRepository confirmationTokenRepository,
-                               EmailSenderUtil emailSenderUtil,
                                NotificationRepository notificationRepository,
-                               MeterAccountDetailsService meterAccountDetailsService) {
+                               MeterAccountDetailsService meterAccountDetailsService,
+                               ConfirmationTokenService confirmationTokenService) {
         this.customerRepository = customerRepository;
-        this.confirmationTokenRepository = confirmationTokenRepository;
-        this.emailSenderUtil = emailSenderUtil;
         this.notificationRepository = notificationRepository;
         this.meterAccountDetailsService = meterAccountDetailsService;
+        this.confirmationTokenService = confirmationTokenService;
     }
 
     @Override
@@ -47,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         if (customerRepository.findByEmail(customer.getEmail()).isEmpty()) {
             customerRepository.save(customer);
-            generateAndSendToken(customer);
+            confirmationTokenService.generateAndSendToken(customer);
         } else {
             notification.setId(meterAccountDetails.getNotification().getId());
         }
@@ -62,22 +56,6 @@ public class CustomerServiceImpl implements CustomerService {
         meterAccountDetails.setCustomer(customer);
         meterAccountDetails.setNotification(notification);
         meterAccountDetailsService.saveMeterAccountDetails(meterAccountDetails);
-    }
-
-    private void generateAndSendToken(Customer customer) {
-        // token generate
-        ConfirmationToken confirmationToken = new ConfirmationToken();
-        confirmationToken.setCustomer(customer);
-        confirmationToken.setConfirmationToken(UUID.randomUUID().toString());
-        confirmationToken.setCreatedDate(new Date());
-        confirmationTokenRepository.save(confirmationToken);
-        // email sender
-        emailSenderUtil.send(customer.getEmail(),
-                "Validate Your Email Address - Action Required",
-                "To confirm your account, please click here : "
-                        + host
-                        + "/confirm-account?token="
-                        + confirmationToken.getConfirmationToken());
     }
 
     @Override
@@ -96,13 +74,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public boolean confirmEmail(String confirmationToken) {
-        ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
+        ConfirmationToken token = confirmationTokenService.findByConfirmationToken(confirmationToken);
         if (token != null) {
             final String email = token.getCustomer().getEmail();
-            Optional<Customer> customer = customerRepository.findByEmail(email);
-            customer.orElseThrow(() -> new CustomerNotFoundException("Customer with email " + email + " not found"));
-            customer.get().setEnabled(true);
-            customerRepository.save(customer.get());
+            Customer customer = findCustomerByEmail(email);
+            customer.setEnabled(true);
+            customerRepository.save(customer);
             return true;
         }
         return false;

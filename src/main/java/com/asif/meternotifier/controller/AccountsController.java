@@ -3,6 +3,7 @@ package com.asif.meternotifier.controller;
 import com.asif.meternotifier.dto.Data;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
+import com.asif.meternotifier.service.ConfirmationTokenService;
 import com.asif.meternotifier.service.CustomerService;
 import com.asif.meternotifier.service.MeterAccountDetailsService;
 import com.asif.meternotifier.util.DataMapperUtil;
@@ -18,15 +19,18 @@ public class AccountsController {
     private final MeterAccountDetailsService meterAccountDetailsService;
     private final Validation validation;
     private final DataMapperUtil dataMapperUtil;
+    private final ConfirmationTokenService confirmationTokenService;
 
     public AccountsController(CustomerService customerService,
                               MeterAccountDetailsService meterAccountDetailsService,
                               Validation validation,
-                              DataMapperUtil dataMapperUtil) {
+                              DataMapperUtil dataMapperUtil,
+                              ConfirmationTokenService confirmationTokenService) {
         this.customerService = customerService;
         this.meterAccountDetailsService = meterAccountDetailsService;
         this.validation = validation;
         this.dataMapperUtil = dataMapperUtil;
+        this.confirmationTokenService = confirmationTokenService;
     }
 
     @RequestMapping(value = "/confirm-account", method = {RequestMethod.GET, RequestMethod.POST})
