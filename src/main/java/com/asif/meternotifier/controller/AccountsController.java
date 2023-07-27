@@ -3,6 +3,7 @@ package com.asif.meternotifier.controller;
 import com.asif.meternotifier.dto.Data;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
+import com.asif.meternotifier.entity.Notification;
 import com.asif.meternotifier.service.ConfirmationTokenService;
 import com.asif.meternotifier.service.CustomerService;
 import com.asif.meternotifier.service.MeterAccountDetailsService;
@@ -19,18 +20,15 @@ public class AccountsController {
     private final MeterAccountDetailsService meterAccountDetailsService;
     private final Validation validation;
     private final DataMapperUtil dataMapperUtil;
-    private final ConfirmationTokenService confirmationTokenService;
 
     public AccountsController(CustomerService customerService,
                               MeterAccountDetailsService meterAccountDetailsService,
                               Validation validation,
-                              DataMapperUtil dataMapperUtil,
-                              ConfirmationTokenService confirmationTokenService) {
+                              DataMapperUtil dataMapperUtil) {
         this.customerService = customerService;
         this.meterAccountDetailsService = meterAccountDetailsService;
         this.validation = validation;
         this.dataMapperUtil = dataMapperUtil;
-        this.confirmationTokenService = confirmationTokenService;
     }
 
     @RequestMapping(value = "/confirm-account", method = {RequestMethod.GET, RequestMethod.POST})
@@ -76,8 +74,13 @@ public class AccountsController {
                 model.addAttribute("error", "The Account No. does not exist");
                 return "add-meter";
             } else {
+                Customer customer = customerService.findCustomerById(id);
                 meterAccountDetails.setBalance(data.getBalance());
-                customerService.saveCustomer(customerService.findCustomerById(id), meterAccountDetails);
+                meterAccountDetails.setNotification(new Notification());
+                meterAccountDetails.setCustomer(customer);
+                meterAccountDetailsService.save(meterAccountDetails);
+                customer.getMeterAccountDetailsList().add(meterAccountDetails);
+                customerService.save(customer);
                 return "redirect:/customer-account-details/{id}";
             }
         } else {
@@ -102,7 +105,7 @@ public class AccountsController {
                             MeterAccountDetails meterAccountDetails,
                             Model model) {
         Customer customer = meterAccountDetailsService.findByAccountNumber(meterAccountDetails.getAccountNumber()).getCustomer();
-        customerService.saveCustomer(customer, meterAccountDetails);
+        customerService.save(customer);
         return "redirect:/customer-account-details/" + customer.getId();
     }
 

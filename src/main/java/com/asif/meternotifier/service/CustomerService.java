@@ -4,7 +4,7 @@ import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
 
 public interface CustomerService {
-    void saveCustomer(Customer customer, MeterAccountDetails meterAccountDetails);
+    void save(Customer customer);
 
     Customer findCustomerByEmail(String email);
 

@@ -18,7 +18,7 @@
                 role="form"
                 action="#"
                 th:action="@{/signup}"
-                th:object="${customer}"
+                th:object="${signupFormData}"
         >
             <div class="row">
                 <input
@@ -29,14 +29,14 @@
                 >
             </div>
             <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-            <div class="row" th:object="${meterAccountDetails}">
+            <div class="row">
                 <input type="text"
                        placeholder="Account No"
                        th:field="*{accountNumber}"
                        required
                 >
             </div>
-            <div class="row" th:object="${meterAccountDetails}">
+            <div class="row">
                 <input type="text"
                        placeholder="Meter No"
                        th:field="*{meterNumber}"

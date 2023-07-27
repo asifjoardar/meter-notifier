@@ -1,9 +1,14 @@
 package com.asif.meternotifier.controller;
 
 import com.asif.meternotifier.dto.Data;
+import com.asif.meternotifier.dto.SignupFormData;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
+import com.asif.meternotifier.entity.Notification;
 import com.asif.meternotifier.service.CustomerService;
+import com.asif.meternotifier.service.MeterAccountDetailsService;
+import com.asif.meternotifier.service.NotificationService;
+import com.asif.meternotifier.service.impl.DataService;
 import com.asif.meternotifier.util.DataMapperUtil;
 import com.asif.meternotifier.validation.Validation;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,13 +24,16 @@ public class HomeController {
     private final CustomerService customerService;
     private final Validation validation;
     private final DataMapperUtil dataMapperUtil;
+    private final DataService dataService;
 
     public HomeController(CustomerService customerService,
                           Validation validation,
-                          DataMapperUtil dataMapperUtil) {
+                          DataMapperUtil dataMapperUtil,
+                          DataService dataService) {
         this.customerService = customerService;
         this.validation = validation;
         this.dataMapperUtil = dataMapperUtil;
+        this.dataService = dataService;
     }
 
     @GetMapping("/about")
@@ -57,21 +65,22 @@ public class HomeController {
     }
 
     @GetMapping("/signup")
-    public String showRegistrationForm(Customer customer, MeterAccountDetails meterAccountDetails) {
+    public String showRegistrationForm(SignupFormData signupFormData) {
         return "signup";
     }
 
     @PostMapping("/signup")
-    public String registration(@Valid Customer customer,
+    public String registration(@Valid SignupFormData signupFormData,
                                BindingResult result,
-                               MeterAccountDetails meterAccountDetails,
                                Model model) throws JsonProcessingException {
         if (result.hasErrors()) {
             return "signup";
         }
-        final String acNo = meterAccountDetails.getAccountNumber();
-        final String meterNo = meterAccountDetails.getMeterNumber();
-        if (validation.emailExist(customer.getEmail())) {
+
+        final String acNo = signupFormData.getAccountNumber();
+        final String meterNo = signupFormData.getMeterNumber();
+
+        if (validation.emailExist(signupFormData.getEmail())) {
             model.addAttribute("error", "Email address is already in use");
             return "signup";
         } else if (!validation.accountMeterExist(acNo, meterNo)) {
@@ -80,8 +89,8 @@ public class HomeController {
                 model.addAttribute("error", "The Account No. does not exist");
                 return "signup";
             } else {
-                meterAccountDetails.setBalance(data.getBalance());
-                customerService.saveCustomer(customer, meterAccountDetails);
+                signupFormData.setBalance(data.getBalance());
+                Customer customer = dataService.saveFormDataToTables(signupFormData);
                 return "redirect:/email-verification/" + customer.getId();
             }
         } else {
