@@ -1,8 +1,6 @@
 package com.asif.meternotifier.service.impl;
 
-import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
-import com.asif.meternotifier.entity.Notification;
 import com.asif.meternotifier.exception.MeterNotFoundException;
 import com.asif.meternotifier.repository.MeterAccountDetailsRepository;
 import com.asif.meternotifier.service.MeterAccountDetailsService;

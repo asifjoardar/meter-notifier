@@ -4,4 +4,6 @@ import com.asif.meternotifier.entity.Notification;
 
 public interface NotificationService {
     public void save(Notification notification);
+
+    public Notification findByEmail(String email);
 }

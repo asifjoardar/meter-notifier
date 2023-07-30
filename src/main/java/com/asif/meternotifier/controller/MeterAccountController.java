@@ -1,12 +1,13 @@
 package com.asif.meternotifier.controller;
 
 import com.asif.meternotifier.dto.Data;
+import com.asif.meternotifier.dto.FormData;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
 import com.asif.meternotifier.entity.Notification;
-import com.asif.meternotifier.service.ConfirmationTokenService;
 import com.asif.meternotifier.service.CustomerService;
 import com.asif.meternotifier.service.MeterAccountDetailsService;
+import com.asif.meternotifier.service.impl.DataService;
 import com.asif.meternotifier.util.DataMapperUtil;
 import com.asif.meternotifier.validation.Validation;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,40 +16,23 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class AccountsController {
+public class MeterAccountController {
     private final CustomerService customerService;
     private final MeterAccountDetailsService meterAccountDetailsService;
     private final Validation validation;
     private final DataMapperUtil dataMapperUtil;
+    private final DataService dataService;
 
-    public AccountsController(CustomerService customerService,
-                              MeterAccountDetailsService meterAccountDetailsService,
-                              Validation validation,
-                              DataMapperUtil dataMapperUtil) {
+    public MeterAccountController(CustomerService customerService,
+                                  MeterAccountDetailsService meterAccountDetailsService,
+                                  Validation validation,
+                                  DataMapperUtil dataMapperUtil,
+                                  DataService dataService) {
         this.customerService = customerService;
         this.meterAccountDetailsService = meterAccountDetailsService;
         this.validation = validation;
         this.dataMapperUtil = dataMapperUtil;
-    }
-
-    @RequestMapping(value = "/confirm-account", method = {RequestMethod.GET, RequestMethod.POST})
-    public String confirmUserAccount(@RequestParam("token") String confirmationToken) {
-        if (customerService.confirmEmail(confirmationToken)) {
-            return "email-verified";
-        } else {
-            return "404";
-        }
-    }
-
-    @GetMapping("/customer-account-details/{id}")
-    public String customerInfoDetails(@PathVariable("id") Long id, Model model) {
-        if (validation.emailEnabled(id)) {
-            Customer customer = customerService.findCustomerById(id);
-            model.addAttribute("customer", customer);
-            return "customer-account-details";
-        } else {
-            return "redirect:/email-verification/" + id;
-        }
+        this.dataService = dataService;
     }
 
     @GetMapping("/add-meter/{id}")
@@ -89,24 +73,27 @@ public class AccountsController {
         }
     }
 
-    @GetMapping("edit-meter/{accountNumber}")
-    public String showEditMeter(@PathVariable("accountNumber") String accountNumber, Model model) {
+    @GetMapping("edit-meter/{id}/{accountNumber}")
+    public String showEditMeter(@PathVariable("id") Long id,
+                                @PathVariable("accountNumber") String accountNumber,
+                                Model model) {
         MeterAccountDetails meterAccountDetails = meterAccountDetailsService.findByAccountNumber(accountNumber);
+        FormData formData = DataMapperUtil.dataMappingByAccountNo(meterAccountDetails);
         if (validation.emailEnabled(meterAccountDetails.getCustomer().getId())) {
-            model.addAttribute("meterAccountDetails", meterAccountDetails);
+            model.addAttribute("id", id);
+            model.addAttribute("formData", formData);
             return "edit-meter";
         } else {
-            return "redirect:/email-verification/" + meterAccountDetails.getCustomer().getId();
+            return "redirect:/email-verification/" + id;
         }
     }
 
-    @PostMapping("edit-meter/{accountNumber}")
-    public String editMeter(@PathVariable("accountNumber") String accountNumber,
-                            MeterAccountDetails meterAccountDetails,
+    @PostMapping("edit-meter/{id}/{accountNumber}")
+    public String editMeter(@PathVariable("id") String id,
+                            FormData formData,
                             Model model) {
-        Customer customer = meterAccountDetailsService.findByAccountNumber(meterAccountDetails.getAccountNumber()).getCustomer();
-        customerService.save(customer);
-        return "redirect:/customer-account-details/" + customer.getId();
+        dataService.updateFormDataToTables(formData);
+        return "redirect:/customer-account-details/" + id;
     }
 
     @GetMapping("delete-confirmation/{accountNumber}")

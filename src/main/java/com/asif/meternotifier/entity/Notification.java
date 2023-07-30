@@ -21,7 +21,7 @@ public class Notification {
 
     private boolean notified;
 
-    private Double minimumBalance;
+    private double minimumBalance;
 
     private String emailToSendNotification;
 }

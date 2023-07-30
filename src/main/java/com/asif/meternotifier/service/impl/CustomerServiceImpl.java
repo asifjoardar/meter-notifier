@@ -2,12 +2,10 @@ package com.asif.meternotifier.service.impl;
 
 import com.asif.meternotifier.entity.ConfirmationToken;
 import com.asif.meternotifier.entity.Customer;
-import com.asif.meternotifier.entity.MeterAccountDetails;
 import com.asif.meternotifier.exception.CustomerNotFoundException;
 import com.asif.meternotifier.repository.CustomerRepository;
 import com.asif.meternotifier.service.ConfirmationTokenService;
 import com.asif.meternotifier.service.CustomerService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,9 +14,6 @@ import java.util.Optional;
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final ConfirmationTokenService confirmationTokenService;
-
-    @Value("${host}")
-    private String host;
 
     public CustomerServiceImpl(CustomerRepository customerRepository,
                                ConfirmationTokenService confirmationTokenService) {

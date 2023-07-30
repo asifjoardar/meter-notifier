@@ -1,6 +1,8 @@
 package com.asif.meternotifier.util;
 
 import com.asif.meternotifier.dto.Data;
+import com.asif.meternotifier.dto.FormData;
+import com.asif.meternotifier.entity.MeterAccountDetails;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,10 +28,23 @@ public class DataMapperUtil {
         return mapper.treeToValue(request(url), Data.class);
     }
 
+    public static FormData dataMappingByAccountNo(MeterAccountDetails meterAccountDetails) {
+        FormData formData = new FormData();
+        formData.setEmail(meterAccountDetails.getCustomer().getEmail());
+        formData.setAccountNumber(meterAccountDetails.getAccountNumber());
+        formData.setMeterNumber(meterAccountDetails.getMeterNumber());
+        formData.setBalance(meterAccountDetails.getBalance());
+        formData.setNotificationStatus(meterAccountDetails.getNotification().isStatus());
+        formData.setMinBalance(meterAccountDetails.getNotification().getMinimumBalance());
+        formData.setSendNotificationTo(meterAccountDetails.getNotification().getEmailToSendNotification());
+        return formData;
+    }
+
     private JsonNode request(String url) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readTree(restTemplate.getForObject(url, String.class)).path("data");
     }
+
     private String getUrl(String acNo, String meterNo) {
         return dataHost
                 + "/api/tkdes/customer/getBalance?accountNo="

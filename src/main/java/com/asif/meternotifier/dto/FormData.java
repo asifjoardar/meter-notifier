@@ -4,15 +4,20 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
-public class SignupFormData {
+@ToString
+public class FormData {
     @Email
     private String email;
     @NotEmpty
     private String accountNumber;
     @NotEmpty
     private String meterNumber;
-    private Double balance;
+    private double balance;
+    private boolean notificationStatus;
+    private double minBalance;
+    private String sendNotificationTo;
 }
