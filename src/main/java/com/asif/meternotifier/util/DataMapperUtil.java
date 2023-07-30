@@ -1,6 +1,6 @@
 package com.asif.meternotifier.util;
 
-import com.asif.meternotifier.dto.Data;
+import com.asif.meternotifier.dto.ApiData;
 import com.asif.meternotifier.dto.FormData;
 import com.asif.meternotifier.entity.MeterAccountDetails;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,10 +22,10 @@ public class DataMapperUtil {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public Data getDataFromMapper(String acNo, String meterNo) throws JsonProcessingException {
+    public ApiData getDataFromMapper(String acNo, String meterNo) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String url = getUrl(acNo, meterNo);
-        return mapper.treeToValue(request(url), Data.class);
+        return mapper.treeToValue(request(url), ApiData.class);
     }
 
     public static FormData dataMappingByAccountNo(MeterAccountDetails meterAccountDetails) {

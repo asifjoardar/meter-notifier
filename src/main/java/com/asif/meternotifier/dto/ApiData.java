@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Data {
+public class ApiData {
     private String accountNo;
     private String meterNo;
     private double balance;

@@ -1,6 +1,6 @@
 package com.asif.meternotifier.controller;
 
-import com.asif.meternotifier.dto.Data;
+import com.asif.meternotifier.dto.ApiData;
 import com.asif.meternotifier.dto.FormData;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.MeterAccountDetails;
@@ -53,7 +53,7 @@ public class MeterAccountController {
         final String acNo = meterAccountDetails.getAccountNumber();
         final String meterNo = meterAccountDetails.getMeterNumber();
         if (!validation.accountMeterExist(acNo, meterNo)) {
-            Data data = dataMapperUtil.getDataFromMapper(acNo, meterNo);
+            ApiData data = dataMapperUtil.getDataFromMapper(acNo, meterNo);
             if (data == null) {
                 model.addAttribute("error", "The Account No. does not exist");
                 return "add-meter";
