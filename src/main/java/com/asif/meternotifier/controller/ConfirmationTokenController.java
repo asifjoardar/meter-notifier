@@ -15,11 +15,13 @@ public class ConfirmationTokenController {
 
     @RequestMapping(value = "/confirm-account", method = {RequestMethod.GET, RequestMethod.POST})
     public String confirmUserAccount(@RequestParam("token") String confirmationToken) {
-        if (customerService.confirmEmail(confirmationToken)) {
-            return "email-verified";
-        } else {
-            return "404";
+        try {
+            customerService.confirmEmail(confirmationToken);
+        } catch (Exception exception) {
+            // todo: will add logger
+            System.out.println(exception.getMessage());
         }
+        return "email-verified";
     }
 
     @GetMapping("/email-verification/{id}")

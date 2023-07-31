@@ -1,7 +1,7 @@
 package com.asif.meternotifier.service.impl;
 
 import com.asif.meternotifier.entity.Meter;
-import com.asif.meternotifier.exception.MeterNotFoundException;
+import com.asif.meternotifier.exception.NotFoundException;
 import com.asif.meternotifier.repository.MeterRepository;
 import com.asif.meternotifier.service.MeterService;
 import jakarta.transaction.Transactional;
@@ -26,14 +26,14 @@ public class MeterServiceImpl implements MeterService {
     @Override
     public Meter findByAccountNumber(String accountNumber) {
         Optional<Meter> meterAccountDetails = meterAccountDetailsRepository.findByAccountNumber(accountNumber);
-        meterAccountDetails.orElseThrow(() -> new MeterNotFoundException("Account no: " + accountNumber + " is not found"));
+        meterAccountDetails.orElseThrow(() -> new NotFoundException("Account no: " + accountNumber + " is not found"));
         return meterAccountDetails.get();
     }
 
     @Override
     public void deleteByAccountNumber(String accountNumber) {
         Optional<Meter> meterAccountDetails = meterAccountDetailsRepository.findByAccountNumber(accountNumber);
-        meterAccountDetails.orElseThrow(() -> new MeterNotFoundException("Account no: " + accountNumber + " is not found"));
+        meterAccountDetails.orElseThrow(() -> new NotFoundException("Account no: " + accountNumber + " is not found"));
         meterAccountDetailsRepository.deleteByAccountNumber(accountNumber);
     }
 }

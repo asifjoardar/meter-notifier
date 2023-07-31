@@ -2,6 +2,7 @@ package com.asif.meternotifier.service.impl;
 
 import com.asif.meternotifier.entity.ConfirmationToken;
 import com.asif.meternotifier.entity.Customer;
+import com.asif.meternotifier.exception.NotFoundException;
 import com.asif.meternotifier.repository.ConfirmationTokenRepository;
 import com.asif.meternotifier.service.ConfirmationTokenService;
 import com.asif.meternotifier.service.EmailService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -42,7 +44,9 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
                         + confirmationToken.getConfirmationToken());
     }
 
-    public ConfirmationToken findByConfirmationToken(String confirmationToken){
-        return confirmationTokenRepository.findByConfirmationToken(confirmationToken);
+    public ConfirmationToken findByConfirmationToken(String token){
+        Optional<ConfirmationToken> confirmationToken = confirmationTokenRepository.findByConfirmationToken(token);
+        confirmationToken.orElseThrow(() -> new NotFoundException("Invalid Token"));
+        return confirmationToken.get();
     }
 }

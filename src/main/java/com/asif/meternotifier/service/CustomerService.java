@@ -13,5 +13,5 @@ public interface CustomerService {
 
     Customer findCustomerById(Long id);
 
-    boolean confirmEmail(String confirmationToken);
+    void confirmEmail(String confirmationToken);
 }
