@@ -5,7 +5,7 @@ import com.asif.meternotifier.dto.FormData;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.service.ConfirmationTokenService;
 import com.asif.meternotifier.service.CustomerService;
-import com.asif.meternotifier.service.impl.DataService;
+import com.asif.meternotifier.service.impl.FormDataService;
 import com.asif.meternotifier.util.DataMapperUtil;
 import com.asif.meternotifier.validation.Validation;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -22,13 +23,13 @@ public class CustomerController {
     private final CustomerService customerService;
     private final Validation validation;
     private final DataMapperUtil dataMapperUtil;
-    private final DataService dataService;
+    private final FormDataService dataService;
     private final ConfirmationTokenService confirmationTokenService;
 
     public CustomerController(CustomerService customerService,
                               Validation validation,
                               DataMapperUtil dataMapperUtil,
-                              DataService dataService,
+                              FormDataService dataService,
                               ConfirmationTokenService confirmationTokenService) {
         this.customerService = customerService;
         this.validation = validation;
@@ -38,12 +39,13 @@ public class CustomerController {
     }
 
     @GetMapping("/")
-    public String showSigninForm(Customer customer) {
+    public String showSigninForm(Model model) {
+        model.addAttribute("customer", new Customer());
         return "signin";
     }
 
     @PostMapping("/")
-    public String signin(@Valid Customer customer, BindingResult result, Model model) {
+    public String signin(@Valid @ModelAttribute("customer") Customer customer, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "signin";
         }
@@ -67,9 +69,8 @@ public class CustomerController {
     }
 
     @PostMapping("/signup")
-    public String registration(@Valid FormData signupFormData,
-                               BindingResult result,
-                               Model model) throws JsonProcessingException {
+    public String registration(@Valid @ModelAttribute("signupFormData") FormData signupFormData,
+                               BindingResult result, Model model) throws JsonProcessingException {
         if (result.hasErrors()) {
             return "signup";
         }

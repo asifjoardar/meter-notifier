@@ -2,7 +2,7 @@ package com.asif.meternotifier.util;
 
 import com.asif.meternotifier.dto.ApiData;
 import com.asif.meternotifier.dto.FormData;
-import com.asif.meternotifier.entity.MeterAccountDetails;
+import com.asif.meternotifier.entity.Meter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +28,7 @@ public class DataMapperUtil {
         return mapper.treeToValue(request(url), ApiData.class);
     }
 
-    public static FormData dataMappingByAccountNo(MeterAccountDetails meterAccountDetails) {
+    public FormData dataMappingByAccountNo(Meter meterAccountDetails) {
         FormData formData = new FormData();
         formData.setEmail(meterAccountDetails.getCustomer().getEmail());
         formData.setAccountNumber(meterAccountDetails.getAccountNumber());

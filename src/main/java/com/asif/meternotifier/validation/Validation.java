@@ -1,17 +1,17 @@
 package com.asif.meternotifier.validation;
 
 import com.asif.meternotifier.repository.CustomerRepository;
-import com.asif.meternotifier.repository.MeterAccountDetailsRepository;
+import com.asif.meternotifier.repository.MeterRepository;
 import com.asif.meternotifier.service.CustomerService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class Validation {
-    private final MeterAccountDetailsRepository meterAccountDetailsRepository;
+    private final MeterRepository meterAccountDetailsRepository;
     private final CustomerRepository customerRepository;
     private final CustomerService customerService;
 
-    public Validation(MeterAccountDetailsRepository meterAccountDetailsRepository,
+    public Validation(MeterRepository meterAccountDetailsRepository,
                       CustomerRepository customerRepository,
                       CustomerService customerService) {
         this.meterAccountDetailsRepository = meterAccountDetailsRepository;

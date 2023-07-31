@@ -12,7 +12,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MeterAccountDetails {
+public class Meter {
 
     @Id
     @NotEmpty

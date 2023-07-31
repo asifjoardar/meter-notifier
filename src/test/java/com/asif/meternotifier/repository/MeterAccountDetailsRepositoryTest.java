@@ -1,6 +1,6 @@
 package com.asif.meternotifier.repository;
 
-import com.asif.meternotifier.entity.MeterAccountDetails;
+import com.asif.meternotifier.entity.Meter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class MeterAccountDetailsRepositoryTest {
 
     @Autowired
-    private MeterAccountDetailsRepository meterAccountDetailsTestRepository;
+    private MeterRepository meterAccountDetailsTestRepository;
 
     @AfterEach
     void tearDown() {
@@ -21,7 +21,7 @@ class MeterAccountDetailsRepositoryTest {
 
     @Test
     void findByAccountNumber() {
-        MeterAccountDetails meterAccountDetails = new MeterAccountDetails();
+        Meter meterAccountDetails = new Meter();
         meterAccountDetails.setAccountNumber("12345");
         meterAccountDetails.setMeterNumber("54321");
         meterAccountDetailsTestRepository.save(meterAccountDetails);
@@ -31,7 +31,7 @@ class MeterAccountDetailsRepositoryTest {
 
     @Test
     void notFindByAccountNumber() {
-        MeterAccountDetails meterAccountDetails = new MeterAccountDetails();
+        Meter meterAccountDetails = new Meter();
         meterAccountDetails.setAccountNumber("12345");
         meterAccountDetails.setMeterNumber("54321");
         meterAccountDetailsTestRepository.save(meterAccountDetails);

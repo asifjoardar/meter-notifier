@@ -3,11 +3,11 @@ package com.asif.meternotifier.controller;
 import com.asif.meternotifier.dto.ApiData;
 import com.asif.meternotifier.dto.FormData;
 import com.asif.meternotifier.entity.Customer;
-import com.asif.meternotifier.entity.MeterAccountDetails;
+import com.asif.meternotifier.entity.Meter;
 import com.asif.meternotifier.entity.Notification;
 import com.asif.meternotifier.service.CustomerService;
-import com.asif.meternotifier.service.MeterAccountDetailsService;
-import com.asif.meternotifier.service.impl.DataService;
+import com.asif.meternotifier.service.MeterService;
+import com.asif.meternotifier.service.impl.FormDataService;
 import com.asif.meternotifier.util.DataMapperUtil;
 import com.asif.meternotifier.validation.Validation;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,18 +16,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class MeterAccountController {
+public class MeterController {
     private final CustomerService customerService;
-    private final MeterAccountDetailsService meterAccountDetailsService;
+    private final MeterService meterAccountDetailsService;
     private final Validation validation;
     private final DataMapperUtil dataMapperUtil;
-    private final DataService dataService;
+    private final FormDataService dataService;
 
-    public MeterAccountController(CustomerService customerService,
-                                  MeterAccountDetailsService meterAccountDetailsService,
-                                  Validation validation,
-                                  DataMapperUtil dataMapperUtil,
-                                  DataService dataService) {
+    public MeterController(CustomerService customerService,
+                           MeterService meterAccountDetailsService,
+                           Validation validation,
+                           DataMapperUtil dataMapperUtil,
+                           FormDataService dataService) {
         this.customerService = customerService;
         this.meterAccountDetailsService = meterAccountDetailsService;
         this.validation = validation;
@@ -39,7 +39,7 @@ public class MeterAccountController {
     public String showAddMeter(@PathVariable("id") Long id, Model model) {
         if (validation.emailEnabled(id)) {
             model.addAttribute("id", id);
-            model.addAttribute("meterAccountDetails", new MeterAccountDetails());
+            model.addAttribute("meterAccountDetails", new Meter());
             return "add-meter";
         } else {
             return "redirect:/email-verification/" + id;
@@ -48,7 +48,7 @@ public class MeterAccountController {
 
     @PostMapping("/add-meter/{id}")
     public String addMeter(@PathVariable("id") Long id,
-                           MeterAccountDetails meterAccountDetails,
+                           @ModelAttribute("meterAccountDetails") Meter meterAccountDetails,
                            Model model) throws JsonProcessingException {
         final String acNo = meterAccountDetails.getAccountNumber();
         final String meterNo = meterAccountDetails.getMeterNumber();
@@ -77,8 +77,8 @@ public class MeterAccountController {
     public String showEditMeter(@PathVariable("id") Long id,
                                 @PathVariable("accountNumber") String accountNumber,
                                 Model model) {
-        MeterAccountDetails meterAccountDetails = meterAccountDetailsService.findByAccountNumber(accountNumber);
-        FormData formData = DataMapperUtil.dataMappingByAccountNo(meterAccountDetails);
+        Meter meterAccountDetails = meterAccountDetailsService.findByAccountNumber(accountNumber);
+        FormData formData = dataMapperUtil.dataMappingByAccountNo(meterAccountDetails);
         if (validation.emailEnabled(meterAccountDetails.getCustomer().getId())) {
             model.addAttribute("id", id);
             model.addAttribute("formData", formData);
@@ -90,8 +90,7 @@ public class MeterAccountController {
 
     @PostMapping("edit-meter/{id}/{accountNumber}")
     public String editMeter(@PathVariable("id") String id,
-                            FormData formData,
-                            Model model) {
+                            @ModelAttribute("formData") FormData formData) {
         dataService.updateFormDataToTables(formData);
         return "redirect:/customer-account-details/" + id;
     }

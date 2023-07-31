@@ -29,5 +29,5 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Column(nullable = true)
-    private List<MeterAccountDetails> meterAccountDetailsList = new ArrayList<>();
+    private List<Meter> meterAccountDetailsList = new ArrayList<>();
 }
