@@ -5,7 +5,6 @@ import com.asif.meternotifier.dto.FormData;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.service.ConfirmationTokenService;
 import com.asif.meternotifier.service.CustomerService;
-import com.asif.meternotifier.service.impl.FormDataService;
 import com.asif.meternotifier.util.DataMapperUtil;
 import com.asif.meternotifier.validation.Validation;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,18 +22,15 @@ public class CustomerController {
     private final CustomerService customerService;
     private final Validation validation;
     private final DataMapperUtil dataMapperUtil;
-    private final FormDataService dataService;
     private final ConfirmationTokenService confirmationTokenService;
 
     public CustomerController(CustomerService customerService,
                               Validation validation,
                               DataMapperUtil dataMapperUtil,
-                              FormDataService dataService,
                               ConfirmationTokenService confirmationTokenService) {
         this.customerService = customerService;
         this.validation = validation;
         this.dataMapperUtil = dataMapperUtil;
-        this.dataService = dataService;
         this.confirmationTokenService = confirmationTokenService;
     }
 
@@ -45,7 +41,9 @@ public class CustomerController {
     }
 
     @PostMapping("/")
-    public String signin(@Valid @ModelAttribute("customer") Customer customer, BindingResult result, Model model) {
+    public String signin(@Valid @ModelAttribute("customer") Customer customer,
+                         BindingResult result,
+                         Model model) {
         if (result.hasErrors()) {
             return "signin";
         }
@@ -70,7 +68,8 @@ public class CustomerController {
 
     @PostMapping("/signup")
     public String registration(@Valid @ModelAttribute("signupFormData") FormData signupFormData,
-                               BindingResult result, Model model) throws JsonProcessingException {
+                               BindingResult result,
+                               Model model) throws JsonProcessingException {
         if (result.hasErrors()) {
             return "signup";
         }
@@ -82,13 +81,13 @@ public class CustomerController {
             model.addAttribute("error", "Email address is already in use");
             return "signup";
         } else if (!validation.accountMeterExist(acNo, meterNo)) {
-            ApiData data = dataMapperUtil.getDataFromMapper(acNo, meterNo);
-            if (data == null) {
+            ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
+            if (apiData == null) {
                 model.addAttribute("error", "The Account No. does not exist");
                 return "signup";
             } else {
-                signupFormData.setBalance(data.getBalance());
-                Customer customer = dataService.saveFormDataToTables(signupFormData);
+                signupFormData.setBalance(apiData.getBalance());
+                Customer customer = customerService.save(signupFormData);
                 confirmationTokenService.generateAndSendToken(customer);
                 return "redirect:/email-verification/" + customer.getId();
             }

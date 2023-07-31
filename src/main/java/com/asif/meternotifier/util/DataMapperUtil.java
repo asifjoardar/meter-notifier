@@ -1,8 +1,6 @@
 package com.asif.meternotifier.util;
 
 import com.asif.meternotifier.dto.ApiData;
-import com.asif.meternotifier.dto.FormData;
-import com.asif.meternotifier.entity.Meter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,22 +20,10 @@ public class DataMapperUtil {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public ApiData getDataFromMapper(String acNo, String meterNo) throws JsonProcessingException {
+    public ApiData getCustomerDataFromApi(String acNo, String meterNo) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String url = getUrl(acNo, meterNo);
         return mapper.treeToValue(request(url), ApiData.class);
-    }
-
-    public FormData dataMappingByAccountNo(Meter meterAccountDetails) {
-        FormData formData = new FormData();
-        formData.setEmail(meterAccountDetails.getCustomer().getEmail());
-        formData.setAccountNumber(meterAccountDetails.getAccountNumber());
-        formData.setMeterNumber(meterAccountDetails.getMeterNumber());
-        formData.setBalance(meterAccountDetails.getBalance());
-        formData.setNotificationStatus(meterAccountDetails.getNotification().isStatus());
-        formData.setMinBalance(meterAccountDetails.getNotification().getMinimumBalance());
-        formData.setSendNotificationTo(meterAccountDetails.getNotification().getEmailToSendNotification());
-        return formData;
     }
 
     private JsonNode request(String url) throws JsonProcessingException {

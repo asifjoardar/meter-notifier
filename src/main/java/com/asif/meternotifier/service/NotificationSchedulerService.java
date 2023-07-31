@@ -37,12 +37,12 @@ public class NotificationSchedulerService {
             final String acNo = meterAccountDetails.getAccountNumber();
             final String meterNo = meterAccountDetails.getMeterNumber();
             Notification notification = meterAccountDetails.getNotification();
-            ApiData data = dataMapperUtil.getDataFromMapper(acNo, meterNo);
-            if (data.getBalance() <= notification.getMinimumBalance() && !notification.isNotified()) {
+            ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
+            if (apiData.getBalance() <= notification.getMinimumBalance() && !notification.isNotified()) {
                 emailService.sendEmail(notification.getEmailToSendNotification(),
                         "Low Meter Balance Alert for Meter No: " + meterNo,
                         "Dear Customer, your current balance is "
-                                + data.getBalance()
+                                + apiData.getBalance()
                                 + ". Kindly recharge your account to avoid service disruptions.");
                 notification.setNotified(true);
                 meterAccountDetailsRepository.save(meterAccountDetails);
@@ -57,10 +57,10 @@ public class NotificationSchedulerService {
             final String acNo = meterAccountDetails.getAccountNumber();
             final String meterNo = meterAccountDetails.getMeterNumber();
             Notification notification = meterAccountDetails.getNotification();
-            ApiData data = dataMapperUtil.getDataFromMapper(acNo, meterNo);
-            if (data.getBalance() > notification.getMinimumBalance() && notification.isNotified()) {
+            ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
+            if (apiData.getBalance() > notification.getMinimumBalance() && notification.isNotified()) {
                 notification.setNotified(false);
-                meterAccountDetails.setBalance(data.getBalance());
+                meterAccountDetails.setBalance(apiData.getBalance());
                 meterAccountDetailsRepository.save(meterAccountDetails);
             }
         }
