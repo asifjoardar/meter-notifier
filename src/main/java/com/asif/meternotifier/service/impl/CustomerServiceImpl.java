@@ -35,7 +35,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer save(FormData formData) {
-        if(customerRepository.findByEmail(formData.getEmail()).isPresent()) {
+        if (customerRepository.findByEmail(formData.getEmail()).isPresent()) {
             throw new BadRequestException("Email address is already in use");
         }
 
@@ -62,7 +62,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void addNewMeter(Customer customer, Meter meter){
+    public void addNewMeter(Customer customer, Meter meter) {
         Notification notification = new Notification();
         notification.setEmailToSendNotification(customer.getEmail());
         notificationService.save(notification);

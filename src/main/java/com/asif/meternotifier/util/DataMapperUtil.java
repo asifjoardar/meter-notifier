@@ -25,7 +25,7 @@ public class DataMapperUtil {
         ObjectMapper mapper = new ObjectMapper();
         String url = getUrl(acNo, meterNo);
         ApiData apiData = mapper.treeToValue(request(url), ApiData.class);
-        if(apiData == null) {
+        if (apiData == null) {
             throw new NotFoundException("The Account No. does not exist");
         }
         return apiData;

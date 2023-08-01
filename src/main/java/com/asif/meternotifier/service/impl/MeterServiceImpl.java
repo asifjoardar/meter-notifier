@@ -21,7 +21,7 @@ public class MeterServiceImpl implements MeterService {
 
     @Override
     public void save(Meter meterAccountDetails) {
-        if(meterAccountDetailsRepository.findByAccountNumber(meterAccountDetails.getAccountNumber()).isPresent()) {
+        if (meterAccountDetailsRepository.findByAccountNumber(meterAccountDetails.getAccountNumber()).isPresent()) {
             throw new BadRequestException("Entered account / meter no already in use");
         }
         meterAccountDetailsRepository.save(meterAccountDetails);
