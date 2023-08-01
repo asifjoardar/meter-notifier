@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meter Notifier | Signin</title>
+    <link rel="stylesheet" th:href="@{/css/signin.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+</head>
+<body>
+<div th:insert="~{navbar :: navbar}"></div>
+<div class="container">
+    <div class="wrapper">
+        <div class="title">
+            <span>Welcome!</span>
+            <span>your meter details await, Sign in now</span>
+        </div>
+        <form
+                method="post"
+                action="#"
+                th:action="@{/}"
+                th:object="${customer}"
+        >
+            <div class="row">
+                <input
+                        type="text"
+                        placeholder="Email"
+                        th:field="*{email}"
+                        required
+                >
+            </div>
+            <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            <div class="error" th:if="${error}">
+                <p th:text="${error}"></p>
+            </div>
+            <div class="row button">
+                <input type="submit" value="Sign In">
+            </div>
+            <div class="signup">
+            <span class="signup">Don't have an account?
+             <label><a th:href="@{/signup}">Signup</a></label>
+            </span>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

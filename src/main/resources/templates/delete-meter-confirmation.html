@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meter Notifier | delete-confirmation</title>
+    <link rel="stylesheet" th:href="@{/css/delete-meter-confirmation.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+</head>
+<body>
+<div th:insert="~{navbar :: navbar}"></div>
+<div class="container">
+    <div class="wrapper">
+        <div class="r-1"><h2>Are You Sure?</h2></div>
+        <hr/>
+        <div class="r-2"><p>Do you really want to delete these records? This process cannot be undone.</p></div>
+        <hr>
+        <div class="r-3">
+            <form method="GET" th:action="@{/customer-account-details/{id}(id=${id})}">
+                <button type="submit" class="btn-1 cancel">Cancel</button>
+            </form>
+            <form method="POST" th:action="@{/delete-meter/{accountNumber}(accountNumber=${accountNumber})}">
+                <button type="submit" class="btn-1 delete">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meter Notifier | Add Meter</title>
+    <link rel="stylesheet" th:href="@{/css/add-meter.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+</head>
+<body>
+<div th:insert="~{navbar :: navbar}"></div>
+<div class="container">
+    <div class="wrapper">
+        <div class="title"><span>Add new Meter and Account Number</span></div>
+        <form
+                method="post"
+                role="form"
+                action="#"
+                th:action="@{/add-meter/{id}(id=${id})}"
+                th:object="${meterAccountDetails}"
+        >
+            <div class="row">
+                <input type="text"
+                       placeholder="Account Number"
+                       th:field="*{accountNumber}"
+                       required
+                >
+            </div>
+            <div class="row">
+                <input type="text"
+                       placeholder="Meter Number"
+                       th:field="*{meterNumber}"
+                       required
+                >
+            </div>
+            <div class="error" th:if="${error}">
+                <p th:text="${error}"></p>
+            </div>
+            <div class="row button">
+                <input type="submit" value="Add">
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meter Notifier | Signup</title>
+    <link rel="stylesheet" th:href="@{/css/signup.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+</head>
+<body>
+<div th:insert="~{navbar :: navbar}"></div>
+<div class="container">
+    <div class="wrapper">
+        <div class="title"><span>Signup</span></div>
+        <form
+                method="post"
+                role="form"
+                action="#"
+                th:action="@{/signup}"
+                th:object="${signupFormData}"
+        >
+            <div class="row">
+                <input
+                        type="text"
+                        placeholder="Email"
+                        th:field="*{email}"
+                        required
+                >
+            </div>
+            <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            <div class="row">
+                <input type="text"
+                       placeholder="Account No"
+                       th:field="*{accountNumber}"
+                       required
+                >
+            </div>
+            <div class="row">
+                <input type="text"
+                       placeholder="Meter No"
+                       th:field="*{meterNumber}"
+                       required
+                >
+            </div>
+            <div class="error" th:if="${error}">
+                <p th:text="${error}"></p>
+            </div>
+            <div class="row button">
+                <input type="submit" value="Signup">
+            </div>
+            <div class="login">
+            <span class="login">Already have an account?
+             <label><a th:href="@{/}">Sign In</a></label>
+            </span>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

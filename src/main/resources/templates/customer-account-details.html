@@ -1,0 +1,68 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Meter Notifier | Customer Details</title>
+    <link rel="stylesheet"
+          type="text/css"
+          th:href="@{/css/customer-account-details.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"/>
+
+</head>
+
+<body style="background: #c1c1c1;">
+<div th:insert="~{navbar :: navbar}"></div>
+<div class="container">
+    <h2>List of Meters</h2>
+    <hr/>
+    <a th:href="@{/add-meter/{id}(id=${customer.id})}" class="btn btn-primary">Add Meter</a>
+    <br/><br/>
+    <table class="table table-bordered table-striped" id="customerDetailsTable">
+        <thead>
+        <tr>
+            <th>Email</th>
+            <th>Account No</th>
+            <th>Meter No</th>
+            <th>Balance</th>
+            <th>Notification</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="meterAccountDetails: ${customer.meterAccountDetailsList}">
+            <td th:text="${customer.email}"/>
+            <td th:text="${meterAccountDetails.accountNumber}"/>
+            <td th:text="${meterAccountDetails.meterNumber}"/>
+            <td th:text="${meterAccountDetails.balance}"/>
+            <td th:if="${meterAccountDetails.notification.status}">On</td>
+            <td th:if="${not meterAccountDetails.notification.status}">Off</td>
+            <td>
+                <a
+                   th:href="@{/edit-meter/{id}/{accountNumber}(id=${customer.id}, accountNumber=${meterAccountDetails.accountNumber})}"
+                   class="btn btn-primary">Edit</a>
+                <a th:href="@{/delete-confirmation/{accountNumber}(accountNumber=${meterAccountDetails.accountNumber})}"
+                   class="btn btn-danger ml-2">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#customerDetailsTable").DataTable({
+            'aoColumnDefs': [{
+                'bSortable': false,
+                'aTargets': [-1, -2, -6] /* start by the right */
+            }]
+        });
+    });
+</script>
+</body>
+</html>
