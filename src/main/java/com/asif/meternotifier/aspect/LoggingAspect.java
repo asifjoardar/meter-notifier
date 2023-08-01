@@ -24,7 +24,6 @@ public class LoggingAspect {
             " || within(com.asif.meternotifier.service..*)" +
             " || within(com.asif.meternotifier.controller..*)")
     public void applicationPackagePointcut() {
-        // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }
     @AfterThrowing(pointcut = "applicationPackagePointcut() && springBeanPointcut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {

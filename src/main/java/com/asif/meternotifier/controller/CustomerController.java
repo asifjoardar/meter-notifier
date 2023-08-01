@@ -9,6 +9,7 @@ import com.asif.meternotifier.util.DataMapperUtil;
 import com.asif.meternotifier.validation.Validation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+@Slf4j
 @Controller
 public class CustomerController {
     private final CustomerService customerService;
@@ -47,17 +49,24 @@ public class CustomerController {
         if (result.hasErrors()) {
             return "signin";
         }
-        if (validation.emailExist(customer.getEmail())) {
-            final Long customerId = customerService.findCustomerByEmail(customer.getEmail()).getId();
-            if (validation.emailEnabled(customerId)) {
-                return "redirect:/customer-account-details/" + customerId;
+        String message;
+        try {
+            if (validation.emailExist(customer.getEmail())) {
+                final Long customerId = customerService.findCustomerByEmail(customer.getEmail()).getId();
+                if (validation.emailEnabled(customerId)) {
+                    return "redirect:/customer-account-details/" + customerId;
+                } else {
+                    return "redirect:/email-verification/" + customerId;
+                }
             } else {
-                return "redirect:/email-verification/" + customerId;
+                message = "We couldn't find an account with that email address";
             }
-        } else {
-            model.addAttribute("error", "We couldn't find an account with that email address");
-            return "signin";
+        } catch (Exception exception) {
+            message = "Something went wrong, try again";
+            log.error(exception.getMessage());
         }
+        model.addAttribute("error", message);
+        return "signin";
     }
 
     @GetMapping("/signup")
@@ -76,25 +85,30 @@ public class CustomerController {
 
         final String acNo = signupFormData.getAccountNumber();
         final String meterNo = signupFormData.getMeterNumber();
+        String message;
 
-        if (validation.emailExist(signupFormData.getEmail())) {
-            model.addAttribute("error", "Email address is already in use");
-            return "signup";
-        } else if (!validation.accountMeterExist(acNo, meterNo)) {
-            ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
-            if (apiData == null) {
-                model.addAttribute("error", "The Account No. does not exist");
-                return "signup";
+        try {
+            if (validation.emailExist(signupFormData.getEmail())) {
+                message = "Email address is already in use";
+            } else if (!validation.accountMeterExist(acNo, meterNo)) {
+                ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
+                if (apiData == null) {
+                    message = "The Account No. does not exist";
+                } else {
+                    signupFormData.setBalance(apiData.getBalance());
+                    Customer customer = customerService.save(signupFormData);
+                    confirmationTokenService.generateAndSendToken(customer);
+                    return "redirect:/email-verification/" + customer.getId();
+                }
             } else {
-                signupFormData.setBalance(apiData.getBalance());
-                Customer customer = customerService.save(signupFormData);
-                confirmationTokenService.generateAndSendToken(customer);
-                return "redirect:/email-verification/" + customer.getId();
+                message = "Entered account / meter no already in use";
             }
-        } else {
-            model.addAttribute("error", "Entered account / meter no already in use");
-            return "signup";
+        } catch (Exception exception) {
+            message = "Something went wrong, try again";
+            log.error(exception.getMessage());
         }
+        model.addAttribute("error", message);
+        return "signup";
     }
 
     @GetMapping("/customer-account-details/{id}")

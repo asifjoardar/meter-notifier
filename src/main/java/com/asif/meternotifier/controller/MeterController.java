@@ -9,11 +9,12 @@ import com.asif.meternotifier.service.MeterService;
 import com.asif.meternotifier.service.NotificationService;
 import com.asif.meternotifier.util.DataMapperUtil;
 import com.asif.meternotifier.validation.Validation;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Controller
 public class MeterController {
     private final CustomerService customerService;
@@ -48,24 +49,30 @@ public class MeterController {
     @PostMapping("/add-meter/{id}")
     public String addMeter(@PathVariable("id") Long id,
                            @ModelAttribute("meterAccountDetails") Meter meter,
-                           Model model) throws JsonProcessingException {
+                           Model model) {
         final String acNo = meter.getAccountNumber();
         final String meterNo = meter.getMeterNumber();
-        if (!validation.accountMeterExist(acNo, meterNo)) {
-            ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
-            if (apiData == null) {
-                model.addAttribute("error", "The Account No. does not exist");
-                return "add-meter";
+        String message;
+        try {
+            if (!validation.accountMeterExist(acNo, meterNo)) {
+                ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
+                if (apiData == null) {
+                    message = "The Account No. does not exist";
+                } else {
+                    Customer customer = customerService.findCustomerById(id);
+                    meter.setBalance(apiData.getBalance());
+                    customerService.addNewMeter(customer, meter);
+                    return "redirect:/customer-account-details/{id}";
+                }
             } else {
-                Customer customer = customerService.findCustomerById(id);
-                meter.setBalance(apiData.getBalance());
-                customerService.addNewMeter(customer, meter);
-                return "redirect:/customer-account-details/{id}";
+                message = "Entered account / meter no already in use";
             }
-        } else {
-            model.addAttribute("error", "Entered account / meter no already in use");
-            return "add-meter";
+        } catch (Exception exception) {
+            message = "Something went wrong, try again";
+            log.error(exception.getMessage());
         }
+        model.addAttribute("error", message);
+        return "add-meter";
     }
 
     @GetMapping("edit-meter/{id}/{accountNumber}")
