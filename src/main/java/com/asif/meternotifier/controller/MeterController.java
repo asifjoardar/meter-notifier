@@ -4,6 +4,8 @@ import com.asif.meternotifier.dto.ApiData;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.Meter;
 import com.asif.meternotifier.entity.Notification;
+import com.asif.meternotifier.exception.BadRequestException;
+import com.asif.meternotifier.exception.NotFoundException;
 import com.asif.meternotifier.service.CustomerService;
 import com.asif.meternotifier.service.MeterService;
 import com.asif.meternotifier.service.NotificationService;
@@ -50,23 +52,17 @@ public class MeterController {
     public String addMeter(@PathVariable("id") Long id,
                            @ModelAttribute("meterAccountDetails") Meter meter,
                            Model model) {
-        final String acNo = meter.getAccountNumber();
-        final String meterNo = meter.getMeterNumber();
         String message;
         try {
-            if (!validation.accountMeterExist(acNo, meterNo)) {
-                ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
-                if (apiData == null) {
-                    message = "The Account No. does not exist";
-                } else {
-                    Customer customer = customerService.findCustomerById(id);
-                    meter.setBalance(apiData.getBalance());
-                    customerService.addNewMeter(customer, meter);
-                    return "redirect:/customer-account-details/{id}";
-                }
-            } else {
-                message = "Entered account / meter no already in use";
-            }
+            final String acNo = meter.getAccountNumber();
+            final String meterNo = meter.getMeterNumber();
+            ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
+            Customer customer = customerService.findCustomerById(id);
+            meter.setBalance(apiData.getBalance());
+            customerService.addNewMeter(customer, meter);
+            return "redirect:/customer-account-details/{id}";
+        } catch (NotFoundException | BadRequestException exception) {
+            message = exception.getMessage();
         } catch (Exception exception) {
             message = "Something went wrong, try again";
             log.error(exception.getMessage());

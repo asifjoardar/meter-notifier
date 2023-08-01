@@ -5,6 +5,7 @@ import com.asif.meternotifier.entity.ConfirmationToken;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.Meter;
 import com.asif.meternotifier.entity.Notification;
+import com.asif.meternotifier.exception.BadRequestException;
 import com.asif.meternotifier.exception.NotFoundException;
 import com.asif.meternotifier.repository.CustomerRepository;
 import com.asif.meternotifier.service.ConfirmationTokenService;
@@ -34,6 +35,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer save(FormData formData) {
+        if(customerRepository.findByEmail(formData.getEmail()).isPresent()) {
+            throw new BadRequestException("Email address is already in use");
+        }
 
         Notification notification = new Notification();
         Meter meterAccountDetails = new Meter();
@@ -72,7 +76,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer findCustomerByEmail(String email) {
         Optional<Customer> customer = customerRepository.findByEmail(email);
-        customer.orElseThrow(() -> new NotFoundException("Customer with email " + email + " not found"));
+        customer.orElseThrow(() -> new NotFoundException("We couldn't find an account with that email address"));
         return customer.get();
     }
 

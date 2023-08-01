@@ -3,11 +3,12 @@ package com.asif.meternotifier.controller;
 import com.asif.meternotifier.dto.ApiData;
 import com.asif.meternotifier.dto.FormData;
 import com.asif.meternotifier.entity.Customer;
+import com.asif.meternotifier.exception.BadRequestException;
+import com.asif.meternotifier.exception.NotFoundException;
 import com.asif.meternotifier.service.ConfirmationTokenService;
 import com.asif.meternotifier.service.CustomerService;
 import com.asif.meternotifier.util.DataMapperUtil;
 import com.asif.meternotifier.validation.Validation;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -49,21 +50,19 @@ public class CustomerController {
         if (result.hasErrors()) {
             return "signin";
         }
+
         String message;
+
         try {
-            if (validation.emailExist(customer.getEmail())) {
-                final Long customerId = customerService.findCustomerByEmail(customer.getEmail()).getId();
-                if (validation.emailEnabled(customerId)) {
-                    return "redirect:/customer-account-details/" + customerId;
-                } else {
-                    return "redirect:/email-verification/" + customerId;
-                }
-            } else {
-                message = "We couldn't find an account with that email address";
+            final Long customerId = customerService.findCustomerByEmail(customer.getEmail()).getId();
+            if (validation.emailEnabled(customerId)) {
+                return "redirect:/customer-account-details/" + customerId;
             }
+            return "redirect:/email-verification/" + customerId;
+        } catch (NotFoundException exception) {
+            message = exception.getMessage();
         } catch (Exception exception) {
             message = "Something went wrong, try again";
-            log.error(exception.getMessage());
         }
         model.addAttribute("error", message);
         return "signin";
@@ -78,31 +77,23 @@ public class CustomerController {
     @PostMapping("/signup")
     public String registration(@Valid @ModelAttribute("signupFormData") FormData signupFormData,
                                BindingResult result,
-                               Model model) throws JsonProcessingException {
+                               Model model) {
         if (result.hasErrors()) {
             return "signup";
         }
 
-        final String acNo = signupFormData.getAccountNumber();
-        final String meterNo = signupFormData.getMeterNumber();
         String message;
 
         try {
-            if (validation.emailExist(signupFormData.getEmail())) {
-                message = "Email address is already in use";
-            } else if (!validation.accountMeterExist(acNo, meterNo)) {
-                ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
-                if (apiData == null) {
-                    message = "The Account No. does not exist";
-                } else {
-                    signupFormData.setBalance(apiData.getBalance());
-                    Customer customer = customerService.save(signupFormData);
-                    confirmationTokenService.generateAndSendToken(customer);
-                    return "redirect:/email-verification/" + customer.getId();
-                }
-            } else {
-                message = "Entered account / meter no already in use";
-            }
+            final String acNo = signupFormData.getAccountNumber();
+            final String meterNo = signupFormData.getMeterNumber();
+            ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
+            signupFormData.setBalance(apiData.getBalance());
+            Customer customer = customerService.save(signupFormData);
+            confirmationTokenService.generateAndSendToken(customer);
+            return "redirect:/email-verification/" + customer.getId();
+        } catch (NotFoundException | BadRequestException exception) {
+            message = exception.getMessage();
         } catch (Exception exception) {
             message = "Something went wrong, try again";
             log.error(exception.getMessage());
