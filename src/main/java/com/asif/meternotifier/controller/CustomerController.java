@@ -1,5 +1,6 @@
 package com.asif.meternotifier.controller;
 
+import com.asif.meternotifier.annotations.RequiresEnabledEmail;
 import com.asif.meternotifier.dto.ApiData;
 import com.asif.meternotifier.dto.FormData;
 import com.asif.meternotifier.entity.Customer;
@@ -8,7 +9,6 @@ import com.asif.meternotifier.exception.NotFoundException;
 import com.asif.meternotifier.service.ConfirmationTokenService;
 import com.asif.meternotifier.service.CustomerService;
 import com.asif.meternotifier.util.DataMapperUtil;
-import com.asif.meternotifier.validation.Validation;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -23,16 +23,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class CustomerController {
     private final CustomerService customerService;
-    private final Validation validation;
     private final DataMapperUtil dataMapperUtil;
     private final ConfirmationTokenService confirmationTokenService;
 
     public CustomerController(CustomerService customerService,
-                              Validation validation,
                               DataMapperUtil dataMapperUtil,
                               ConfirmationTokenService confirmationTokenService) {
         this.customerService = customerService;
-        this.validation = validation;
         this.dataMapperUtil = dataMapperUtil;
         this.confirmationTokenService = confirmationTokenService;
     }
@@ -55,10 +52,7 @@ public class CustomerController {
 
         try {
             final Long customerId = customerService.findCustomerByEmail(customer.getEmail()).getId();
-            if (validation.emailEnabled(customerId)) {
-                return "redirect:/customer-account-details/" + customerId;
-            }
-            return "redirect:/email-verification/" + customerId;
+            return "redirect:/customer-account-details/" + customerId;
         } catch (NotFoundException exception) {
             message = exception.getMessage();
         } catch (Exception exception) {
@@ -102,14 +96,11 @@ public class CustomerController {
         return "signup";
     }
 
+    @RequiresEnabledEmail
     @GetMapping("/customer-account-details/{id}")
     public String customerInfoDetails(@PathVariable("id") Long id, Model model) {
-        if (validation.emailEnabled(id)) {
-            Customer customer = customerService.findCustomerById(id);
-            model.addAttribute("customer", customer);
-            return "customer-account-details";
-        } else {
-            return "redirect:/email-verification/" + id;
-        }
+        Customer customer = customerService.findCustomerById(id);
+        model.addAttribute("customer", customer);
+        return "customer-account-details";
     }
 }

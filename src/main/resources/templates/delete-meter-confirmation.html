@@ -19,7 +19,7 @@
             <form method="GET" th:action="@{/customer-account-details/{id}(id=${id})}">
                 <button type="submit" class="btn-1 cancel">Cancel</button>
             </form>
-            <form method="POST" th:action="@{/delete-meter/{accountNumber}(accountNumber=${accountNumber})}">
+            <form method="POST" th:action="@{/delete-meter/{id}/{accountNumber}(id=${id}, accountNumber=${accountNumber})}">
                 <button type="submit" class="btn-1 delete">Delete</button>
             </form>
         </div>

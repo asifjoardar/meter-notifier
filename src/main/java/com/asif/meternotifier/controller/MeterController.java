@@ -1,5 +1,6 @@
 package com.asif.meternotifier.controller;
 
+import com.asif.meternotifier.annotations.RequiresEnabledEmail;
 import com.asif.meternotifier.dto.ApiData;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.Meter;
@@ -10,7 +11,6 @@ import com.asif.meternotifier.service.CustomerService;
 import com.asif.meternotifier.service.MeterService;
 import com.asif.meternotifier.service.NotificationService;
 import com.asif.meternotifier.util.DataMapperUtil;
-import com.asif.meternotifier.validation.Validation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,31 +21,25 @@ import org.springframework.web.bind.annotation.*;
 public class MeterController {
     private final CustomerService customerService;
     private final MeterService meterService;
-    private final Validation validation;
     private final DataMapperUtil dataMapperUtil;
     private final NotificationService notificationService;
 
     public MeterController(CustomerService customerService,
                            MeterService meterService,
-                           Validation validation,
                            DataMapperUtil dataMapperUtil,
                            NotificationService notificationService) {
         this.customerService = customerService;
         this.meterService = meterService;
-        this.validation = validation;
         this.dataMapperUtil = dataMapperUtil;
         this.notificationService = notificationService;
     }
 
+    @RequiresEnabledEmail
     @GetMapping("/add-meter/{id}")
     public String showAddMeter(@PathVariable("id") Long id, Model model) {
-        if (validation.emailEnabled(id)) {
-            model.addAttribute("id", id);
-            model.addAttribute("meterAccountDetails", new Meter());
-            return "add-meter";
-        } else {
-            return "redirect:/email-verification/" + id;
-        }
+        model.addAttribute("id", id);
+        model.addAttribute("meterAccountDetails", new Meter());
+        return "add-meter";
     }
 
     @PostMapping("/add-meter/{id}")
@@ -71,20 +65,17 @@ public class MeterController {
         return "add-meter";
     }
 
+    @RequiresEnabledEmail
     @GetMapping("edit-meter/{id}/{accountNumber}")
     public String showEditMeter(@PathVariable("id") Long id,
                                 @PathVariable("accountNumber") String accountNumber,
                                 Model model) {
         Customer customer = customerService.findCustomerById(id);
         Meter meter = meterService.findByAccountNumber(accountNumber);
-        if (validation.emailEnabled(id)) {
-            model.addAttribute("customer", customer);
-            model.addAttribute("meter", meter);
-            model.addAttribute("notification", meter.getNotification());
-            return "edit-meter";
-        } else {
-            return "redirect:/email-verification/" + id;
-        }
+        model.addAttribute("customer", customer);
+        model.addAttribute("meter", meter);
+        model.addAttribute("notification", meter.getNotification());
+        return "edit-meter";
     }
 
     @PostMapping("edit-meter/{id}/{accountNumber}")
@@ -97,22 +88,19 @@ public class MeterController {
         return "redirect:/customer-account-details/" + id;
     }
 
-    @GetMapping("delete-confirmation/{accountNumber}")
-    public String deleteMeterConf(@PathVariable("accountNumber") String accountNumber, Model model) {
-        Customer customer = meterService.findByAccountNumber(accountNumber).getCustomer();
-        if (validation.emailEnabled(customer.getId())) {
-            model.addAttribute("accountNumber", accountNumber);
-            model.addAttribute("id", customer.getId());
-            return "delete-meter-confirmation";
-        } else {
-            return "redirect:/email-verification/" + customer.getId();
-        }
+    @RequiresEnabledEmail
+    @GetMapping("delete-confirmation/{id}/{accountNumber}")
+    public String deleteMeterConf(@PathVariable("accountNumber") String accountNumber,
+                                  @PathVariable("id") Long id, Model model) {
+        model.addAttribute("accountNumber", accountNumber);
+        model.addAttribute("id", id);
+        return "delete-meter-confirmation";
     }
 
-    @PostMapping("delete-meter/{accountNumber}")
-    public String deleteMeter(@PathVariable("accountNumber") String accountNumber) {
-        Customer customer = meterService.findByAccountNumber(accountNumber).getCustomer();
+    @PostMapping("delete-meter/{id}/{accountNumber}")
+    public String deleteMeter(@PathVariable("accountNumber") String accountNumber,
+                              @PathVariable("id") Long id) {
         meterService.deleteByAccountNumber(accountNumber);
-        return "redirect:/customer-account-details/" + customer.getId();
+        return "redirect:/customer-account-details/" + id;
     }
 }

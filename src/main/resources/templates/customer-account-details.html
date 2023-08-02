@@ -44,7 +44,7 @@
                 <a
                    th:href="@{/edit-meter/{id}/{accountNumber}(id=${customer.id}, accountNumber=${meterAccountDetails.accountNumber})}"
                    class="btn btn-primary">Edit</a>
-                <a th:href="@{/delete-confirmation/{accountNumber}(accountNumber=${meterAccountDetails.accountNumber})}"
+                <a th:href="@{/delete-confirmation/{id}/{accountNumber}(id=${customer.id}, accountNumber=${meterAccountDetails.accountNumber})}"
                    class="btn btn-danger ml-2">Delete</a>
             </td>
         </tr>
