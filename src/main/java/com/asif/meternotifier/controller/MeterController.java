@@ -1,7 +1,7 @@
 package com.asif.meternotifier.controller;
 
 import com.asif.meternotifier.annotations.RequiresEnabledEmail;
-import com.asif.meternotifier.dto.ApiData;
+import com.asif.meternotifier.dto.ApiDataDto;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.Meter;
 import com.asif.meternotifier.entity.Notification;
@@ -50,7 +50,7 @@ public class MeterController {
         try {
             final String acNo = meter.getAccountNumber();
             final String meterNo = meter.getMeterNumber();
-            ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
+            ApiDataDto apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
             Customer customer = customerService.findCustomerById(id);
             meter.setBalance(apiData.getBalance());
             customerService.addNewMeter(customer, meter);

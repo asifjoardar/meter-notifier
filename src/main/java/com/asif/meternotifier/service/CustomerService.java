@@ -1,11 +1,11 @@
 package com.asif.meternotifier.service;
 
-import com.asif.meternotifier.dto.FormData;
+import com.asif.meternotifier.dto.FormDataDto;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.Meter;
 
 public interface CustomerService {
-    Customer save(FormData formData);
+    Customer save(FormDataDto formData);
 
     void addNewMeter(Customer customer, Meter meter);
 

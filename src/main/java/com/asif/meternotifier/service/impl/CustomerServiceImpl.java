@@ -1,6 +1,6 @@
 package com.asif.meternotifier.service.impl;
 
-import com.asif.meternotifier.dto.FormData;
+import com.asif.meternotifier.dto.FormDataDto;
 import com.asif.meternotifier.entity.ConfirmationToken;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.entity.Meter;
@@ -34,7 +34,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer save(FormData formData) {
+    public Customer save(FormDataDto formData) {
         if (customerRepository.findByEmail(formData.getEmail()).isPresent()) {
             throw new BadRequestException("Email address is already in use");
         }

@@ -1,6 +1,6 @@
 package com.asif.meternotifier.util;
 
-import com.asif.meternotifier.dto.ApiData;
+import com.asif.meternotifier.dto.ApiDataDto;
 import com.asif.meternotifier.exception.NotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -21,10 +21,10 @@ public class DataMapperUtil {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public ApiData getCustomerDataFromApi(String acNo, String meterNo) throws JsonProcessingException {
+    public ApiDataDto getCustomerDataFromApi(String acNo, String meterNo) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String url = getUrl(acNo, meterNo);
-        ApiData apiData = mapper.treeToValue(request(url), ApiData.class);
+        ApiDataDto apiData = mapper.treeToValue(request(url), ApiDataDto.class);
         if (apiData == null) {
             throw new NotFoundException("The Account No. does not exist");
         }

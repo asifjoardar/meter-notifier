@@ -1,8 +1,8 @@
 package com.asif.meternotifier.controller;
 
 import com.asif.meternotifier.annotations.RequiresEnabledEmail;
-import com.asif.meternotifier.dto.ApiData;
-import com.asif.meternotifier.dto.FormData;
+import com.asif.meternotifier.dto.ApiDataDto;
+import com.asif.meternotifier.dto.FormDataDto;
 import com.asif.meternotifier.entity.Customer;
 import com.asif.meternotifier.exception.BadRequestException;
 import com.asif.meternotifier.exception.NotFoundException;
@@ -64,12 +64,12 @@ public class CustomerController {
 
     @GetMapping("/signup")
     public String showRegistrationForm(Model model) {
-        model.addAttribute("signupFormData", new FormData());
+        model.addAttribute("signupFormData", new FormDataDto());
         return "signup";
     }
 
     @PostMapping("/signup")
-    public String registration(@Valid @ModelAttribute("signupFormData") FormData signupFormData,
+    public String registration(@Valid @ModelAttribute("signupFormData") FormDataDto signupFormData,
                                BindingResult result,
                                Model model) {
         if (result.hasErrors()) {
@@ -81,7 +81,7 @@ public class CustomerController {
         try {
             final String acNo = signupFormData.getAccountNumber();
             final String meterNo = signupFormData.getMeterNumber();
-            ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
+            ApiDataDto apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
             signupFormData.setBalance(apiData.getBalance());
             Customer customer = customerService.save(signupFormData);
             confirmationTokenService.generateAndSendToken(customer);

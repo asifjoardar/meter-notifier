@@ -1,6 +1,6 @@
 package com.asif.meternotifier.service;
 
-import com.asif.meternotifier.dto.ApiData;
+import com.asif.meternotifier.dto.ApiDataDto;
 import com.asif.meternotifier.entity.Meter;
 import com.asif.meternotifier.entity.Notification;
 import com.asif.meternotifier.repository.MeterRepository;
@@ -37,7 +37,7 @@ public class NotificationSchedulerService {
             final String acNo = meterAccountDetails.getAccountNumber();
             final String meterNo = meterAccountDetails.getMeterNumber();
             Notification notification = meterAccountDetails.getNotification();
-            ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
+            ApiDataDto apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
             if (apiData.getBalance() <= notification.getMinimumBalance() && !notification.isNotified()) {
                 emailService.sendEmail(notification.getEmailToSendNotification(),
                         "Low Meter Balance Alert for Meter No: " + meterNo,
@@ -57,7 +57,7 @@ public class NotificationSchedulerService {
             final String acNo = meterAccountDetails.getAccountNumber();
             final String meterNo = meterAccountDetails.getMeterNumber();
             Notification notification = meterAccountDetails.getNotification();
-            ApiData apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
+            ApiDataDto apiData = dataMapperUtil.getCustomerDataFromApi(acNo, meterNo);
             if (apiData.getBalance() > notification.getMinimumBalance() && notification.isNotified()) {
                 notification.setNotified(false);
                 meterAccountDetails.setBalance(apiData.getBalance());
